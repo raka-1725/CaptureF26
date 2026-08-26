@@ -4,6 +4,7 @@
 #include "Player/CPlayerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
@@ -17,6 +18,9 @@ ACPlayerCharacter::ACPlayerCharacter()
 	
 	CameraBoom->bUsePawnControlRotation = true;
 	bUseControllerRotationYaw  = false;
+	
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(720.0f);
 }
 
 void ACPlayerCharacter::PawnClientRestart()
@@ -52,5 +56,23 @@ void ACPlayerCharacter::HandleLookInput(const FInputActionValue& InputActionValu
 
 void ACPlayerCharacter::HandleMoveInput(const struct FInputActionValue& InputActionValue)
 {
+	FVector2D InputAction = InputActionValue.Get<FVector2D>();
+	InputAction.Normalize();
 	
+	AddMovementInput(GetMoveFwdDirection() * InputAction.Y + GetRightDirection() * InputAction.X);
+}
+
+FVector ACPlayerCharacter::GetRightDirection() const
+{
+	return ViewCam->GetRightVector();
+}
+
+FVector ACPlayerCharacter::GetLookFwdDirection() const
+{
+	return ViewCam->GetForwardVector();
+}
+
+FVector ACPlayerCharacter::GetMoveFwdDirection() const
+{
+	return FVector::CrossProduct(GetRightDirection(), FVector::UpVector);
 }

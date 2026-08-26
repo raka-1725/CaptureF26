@@ -6,6 +6,8 @@
 #include "Characters/CCharacter.h"
 #include "CPlayerCharacter.generated.h"
 
+
+
 /**
  * 
  */
@@ -32,6 +34,10 @@ private:
 private:
 	void HandleLookInput(const struct FInputActionValue& InputActionValue);
 	void HandleMoveInput(const struct FInputActionValue& InputActionValue);
+	
+	FVector GetRightDirection() const;
+	FVector GetLookFwdDirection() const;
+	FVector GetMoveFwdDirection() const;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputMappingContext* GameplayMappingCotext;
