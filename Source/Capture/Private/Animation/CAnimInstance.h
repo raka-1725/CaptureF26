@@ -16,6 +16,14 @@ class UCAnimInstance : public UAnimInstance
 public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+private:
+	UPROPERTY()
+	class ACharacter* OwningCharacter;
 	
+	UPROPERTY()
+	class UCharacterMovementComponent* OwningCharacterMovementComponent;
 	
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess=true))
+	float Speed;
 };
