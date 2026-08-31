@@ -19,12 +19,7 @@ public:
 	ACPlayerCharacter();
 	virtual void PawnClientRestart() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-//------------------//
-// Gameplay Ability //
-//------------------//
 
-private:
-	
 	
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = Camera)
