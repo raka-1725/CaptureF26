@@ -32,12 +32,14 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		SmoothedYawSpeed = UKismetMathLibrary::FInterpTo(SmoothedYawSpeed, YawSpeed, DeltaSeconds, YawSpeedSmoothLerpRate);
 		
 		BodyPreviousRotation = BodyRotation;
+		
+		FRotator ControlRotation = OwningCharacter->GetBaseAimRotation();
+		
+		LookRotationOffset = UKismetMathLibrary::NormalizedDeltaRotator(ControlRotation, BodyRotation);
 	}
 	
 	if (OwningCharacterMovementComponent)
 	{
 		bIsFalling = OwningCharacterMovementComponent->IsFalling();
 	}
-	
-	
 }

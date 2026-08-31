@@ -27,6 +27,11 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
 	FORCEINLINE bool IsOnGround() const {return !bIsFalling; }
 	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE float YawOffset() const {return LookRotationOffset.Yaw; }
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE float PitchOffset() const {return LookRotationOffset.Pitch; }
 
 private:
 	UPROPERTY()
@@ -51,4 +56,7 @@ private:
 	float YawSpeedSmoothLerpRate = 2.0f;
 	
 	FRotator BodyPreviousRotation;
+	
+	UPROPERTY()
+	FRotator LookRotationOffset;
 };
