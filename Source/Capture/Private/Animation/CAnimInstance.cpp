@@ -4,6 +4,9 @@
 #include "Animation/CAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+
+#include "Kismet/KismetMathLibrary.h"
+
 void UCAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
@@ -17,4 +20,24 @@ void UCAnimInstance::NativeInitializeAnimation()
 void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
+	if(OwningCharacter)
+	{
+		Speed = OwningCharacter->GetVelocity().Length();
+		
+		//Getting Rotation, Yaw Speed
+		FRotator BodyRotation = OwningCharacter->GetActorRotation();
+		FRotator BodyRotationDelta = UKismetMathLibrary::NormalizedDeltaRotator(BodyRotation, BodyPreviousRotation);
+		
+		YawSpeed = BodyRotationDelta.Yaw / DeltaSeconds;
+		SmoothedYawSpeed = UKismetMathLibrary::FInterpTo(SmoothedYawSpeed, YawSpeed, DeltaSeconds, YawSpeedSmoothLerpRate);
+		
+		BodyPreviousRotation = BodyRotation;
+	}
+	
+	if (OwningCharacterMovementComponent)
+	{
+		bIsFalling = OwningCharacterMovementComponent->IsFalling();
+	}
+	
+	
 }

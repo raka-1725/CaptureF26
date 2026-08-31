@@ -16,6 +16,17 @@ class UCAnimInstance : public UAnimInstance
 public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	//FORCEINLINE -> run in header and force run, good for performance.
+	FORCEINLINE bool IsMoving() const {return Speed > 0; }
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE bool IsNotMoving() const {return Speed == 0; }
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE bool IsOnGround() const {return !bIsFalling; }
+	
 
 private:
 	UPROPERTY()
@@ -24,6 +35,20 @@ private:
 	UPROPERTY()
 	class UCharacterMovementComponent* OwningCharacterMovementComponent;
 	
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess=true))
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
 	float Speed;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	bool bIsFalling;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	float YawSpeed;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	float SmoothedYawSpeed;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	float YawSpeedSmoothLerpRate = 2.0f;
+	
+	FRotator BodyPreviousRotation;
 };
