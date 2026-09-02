@@ -24,4 +24,12 @@ public:
 private:
 	UPROPERTY()
 	class ACPlayerCharacter* CPlayerCharacter;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+	TSubclassOf<class UGameplayWidget> GameplayWidgetClass;
+	
+	UPROPERTY()
+	UGameplayWidget* GameplayWidget;
+	
+	void SpawnGameplayWidget();
 };
