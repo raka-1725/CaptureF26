@@ -7,6 +7,7 @@
 #include "AbilitySystem/CAttributeSet.h"
 #include "Components/WidgetComponent.h"
 #include "Widgets/OverheadStatusGauge.h"
+//#include "AbilitySystemComponent.h"
 
 // Sets default values
 ACCharacter::ACCharacter()
@@ -32,10 +33,17 @@ void ACCharacter::ClientSideInit()
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 }
 
+
+
 // Called when the game starts or when spawned
 void ACCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	/*if (!CAttributeSet)
+	{
+		CAttributeSet = NewObject<UCAttributeSet>(this);
+		AbilitySystemComponent->AddAttributeSetSubobject(CAttributeSet);
+	}*/
 	ConfigureOverHeadWidgetComponent();
 }
 
@@ -62,10 +70,29 @@ void ACCharacter::ConfigureOverHeadWidgetComponent()
 {
 	if (!OverHeadWidgetComponent) return;
 	
+	if (IsLocallyControlledByPlayer())
+	{
+		OverHeadWidgetComponent->SetHiddenInGame(true);
+		return;
+	}
+		
 	UOverheadStatusGauge* OverheadStatusGauge = Cast<UOverheadStatusGauge>(OverHeadWidgetComponent->GetUserWidgetObject());
 	if (OverheadStatusGauge)
 	{
 		OverheadStatusGauge->ConfigureWithAbilitySystemComponent(GetAbilitySystemComponent());
 	}
+	OverHeadWidgetComponent->SetHiddenInGame(false);
 }
 
+bool ACCharacter::IsLocallyControlledByPlayer() const
+{
+ 	return IsLocallyControlled();
+}
+void ACCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	if (NewController && !NewController->IsPlayerController())
+	{
+		ServerSideInit();
+	}
+}

@@ -46,6 +46,8 @@ void UValueGuage::SetAndBindWithAbilitySystemComponent(class UAbilitySystemCompo
 
 void UValueGuage::SetValue(float NewValue, float NewMaxValue)
 {
+	CachedValue = NewValue;
+	CachedMaxValue = NewMaxValue;
 	if (NewMaxValue == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("max value cannot be 0 for value gauge"))
