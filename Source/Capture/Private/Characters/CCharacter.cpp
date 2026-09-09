@@ -86,7 +86,8 @@ void ACCharacter::ConfigureOverHeadWidgetComponent()
 
 bool ACCharacter::IsLocallyControlledByPlayer() const
 {
- 	return IsLocallyControlled();
+	//checking if it is local AND if it is player controller NOT AI
+ 	return IsLocallyControlled() && GetController()->IsPlayerController();
 }
 void ACCharacter::PossessedBy(AController* NewController)
 {
