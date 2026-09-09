@@ -41,5 +41,14 @@ private:
 	
 	UPROPERTY()
 	class UCAttributeSet* CAttributeSet;
+	//------------------//
+	//		 Widget		//
+	//------------------//
+	
+private:
+	UPROPERTY(VisibleDefaultsOnly, Category = "UI")
+	class UWidgetComponent* OverHeadWidgetComponent;
+	
+	void ConfigureOverHeadWidgetComponent();
 
 };
