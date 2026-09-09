@@ -19,7 +19,7 @@ void UValueGuage::NativePreConstruct()
 	
 }
 
-void UValueGuage::ConfigureAndBindWithAbilitySystemComponent(class UAbilitySystemComponent* AbilitySystemComponent,
+void UValueGuage::SetAndBindWithAbilitySystemComponent(class UAbilitySystemComponent* AbilitySystemComponent,
 	const struct FGameplayAttribute& Attribute, const struct FGameplayAttribute& MaxAttribute)
 {
 	if (AbilitySystemComponent)

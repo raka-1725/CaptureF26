@@ -15,7 +15,7 @@ class UValueGuage : public UUserWidget
 	GENERATED_BODY()
 public:
 	virtual void NativePreConstruct() override;
-	void ConfigureAndBindWithAbilitySystemComponent(class UAbilitySystemComponent* AbilitySystemComponent,
+	void SetAndBindWithAbilitySystemComponent(class UAbilitySystemComponent* AbilitySystemComponent,
 		const struct FGameplayAttribute& Attribute, const struct FGameplayAttribute& MaxAttribute);
 	
 	void SetValue(float NewValue, float NewMaxValue);
