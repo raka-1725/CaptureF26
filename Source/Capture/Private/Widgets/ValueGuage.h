@@ -15,6 +15,8 @@ class UValueGuage : public UUserWidget
 	GENERATED_BODY()
 public:
 	virtual void NativePreConstruct() override;
+	void ConfigureAndBindWithAbilitySystemComponent(class UAbilitySystemComponent* AbilitySystemComponent,
+		const struct FGameplayAttribute& Attribute, const struct FGameplayAttribute& MaxAttribute);
 	
 	void SetValue(float NewValue, float NewMaxValue);
 private:
@@ -27,5 +29,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "ValueGuage")
 	FLinearColor BarColor;
 	
+	void ValueChanged(const struct FOnAttributeChangeData& ChangedData);
+	void MaxValueChanged(const struct FOnAttributeChangeData& ChangedData);
 	
+	float CachedValue;
+	float CachedMaxValue;
 };

@@ -2,6 +2,10 @@
 
 
 #include "Widgets/ValueGuage.h"
+
+#include "AttributeSet.h"
+#include "AbilitySystemComponent.h"
+
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "ProfilingDebugging/CookStats.h"
@@ -13,6 +17,31 @@ void UValueGuage::NativePreConstruct()
 	
 	ProgressBar->SetFillColorAndOpacity(BarColor);
 	
+}
+
+void UValueGuage::ConfigureAndBindWithAbilitySystemComponent(class UAbilitySystemComponent* AbilitySystemComponent,
+	const struct FGameplayAttribute& Attribute, const struct FGameplayAttribute& MaxAttribute)
+{
+	if (AbilitySystemComponent)
+	{
+		bool bIsFound = false;
+		float Value = AbilitySystemComponent->GetGameplayAttributeValue(Attribute, bIsFound);
+	
+		if (!bIsFound)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Cant find attribute : %s"), *(Attribute.GetName()))
+		}
+		
+		float MaxValue = AbilitySystemComponent->GetGameplayAttributeValue(MaxAttribute, bIsFound);
+		if (!bIsFound)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Cant find attribute : %s"), *(MaxAttribute.GetName()))
+		}
+		
+		SetValue(Value, MaxValue);
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(this, &UValueGuage::ValueChanged);
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(MaxAttribute).AddUObject(this, &UValueGuage::MaxValueChanged);
+	}
 }
 
 void UValueGuage::SetValue(float NewValue, float NewMaxValue)
@@ -36,4 +65,14 @@ void UValueGuage::SetValue(float NewValue, float NewMaxValue)
 		);
 	
 	
+}
+
+void UValueGuage::ValueChanged(const struct FOnAttributeChangeData& ChangedData)
+{
+	SetValue(ChangedData.NewValue, CachedMaxValue);
+}
+
+void UValueGuage::MaxValueChanged(const struct FOnAttributeChangeData& ChangedData)
+{
+	SetValue(CachedValue, ChangedData.NewValue);
 }
