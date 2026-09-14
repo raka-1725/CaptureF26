@@ -13,12 +13,15 @@ UCLASS()
 class UGA_Combo : public UCGameplayAbility
 {
 	GENERATED_BODY()
-	
+	UGA_Combo();
 public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 		const FGameplayAbilityActorInfo* ActorInfo, 
 		const FGameplayAbilityActivationInfo ActivationInfo, 
 		const FGameplayEventData* TriggerEventData) override;
 	
+private:
+	UPROPERTY(EditDefaultsOnly, category = "Animation")
+	UAnimMontage* ComboMontage;
 
 };
