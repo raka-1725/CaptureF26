@@ -11,3 +11,5 @@ UE_DEFINE_GAMEPLAY_TAG_COMMENT(TAG_ABILITY_COMBO_CHANGE_COMBO03, "ability.combo.
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(TAG_ABILITY_COMBO_CHANGE_COMBO04, "ability.combo.change.combo04", "tag to send the combo ability to signal what is the next combo")
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(TAG_ABILITY_COMBO_CHANGE, "ability.combo.change", "tag to send the combo ability to signal what is the next combo")
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(TAG_ABILITY_COMBO_CHANGE_END, "ability.combo.change.end", "tag to send the combo ability to signal no combo anymore")
+
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(TAG_ABILITY_COMBO_CHANGE_DAMAGE, "ability.combo.damage", "tag to send the combo ability to ask it to do damage")

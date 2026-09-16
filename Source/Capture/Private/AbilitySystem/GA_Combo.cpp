@@ -4,6 +4,7 @@
 #include "AbilitySystem/GA_Combo.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitgameplayEvent.h"
+#include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
 #include "AbilitySystem/CAbilitySystemNativeTags.h"
 #include "GameplayTagsManager.h"
 
@@ -41,6 +42,15 @@ void UGA_Combo::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const F
 		WaitComboChangeEvent->EventReceived.AddDynamic(this,&UGA_Combo::HandleComboChange);
 		WaitComboChangeEvent->ReadyForActivation();
 	}
+	
+	SetupWaitInputPress();
+	
+	if (K2_HasAuthority())
+	{
+		UAbilityTask_WaitGameplayEvent* WaitDamageEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, TAG_ABILITY_COMBO_CHANGE_DAMAGE);
+		WaitDamageEvent->EventReceived.AddDynamic(this,&UGA_Combo::DoDamage);
+		WaitDamageEvent->ReadyForActivation();
+	}
 }
 
 void UGA_Combo::HandleComboChange(FGameplayEventData EventData)
@@ -59,3 +69,33 @@ void UGA_Combo::HandleComboChange(FGameplayEventData EventData)
 	
 	UE_LOG(LogTemp, Warning, TEXT("Next combo changed to : %s"), *(NextComboName.ToString()));
 }
+
+void UGA_Combo::SetupWaitInputPress()
+{
+	UAbilityTask_WaitInputPress* WaitInputPress = UAbilityTask_WaitInputPress::WaitInputPress(this);
+	WaitInputPress->OnPress.AddDynamic(this,&UGA_Combo::HandleComboInputPress);
+	WaitInputPress->ReadyForActivation();
+}
+
+void UGA_Combo::HandleComboInputPress(float TimeWaited)
+{
+	UE_LOG(LogTemp,Warning,TEXT("Handle combo, Next combo :%s"), *(NextComboName.ToString()));
+	SetupWaitInputPress();
+	
+	if (NextComboName == NAME_None)
+	{
+		return;
+	}
+	
+	if (UAnimInstance* AnimInst = GetCurrentActorInfo()->GetAnimInstance())
+	{
+		AnimInst->Montage_SetNextSection(AnimInst->Montage_GetCurrentSection(ComboMontage), NextComboName, ComboMontage);
+	}
+}
+
+void UGA_Combo::DoDamage(FGameplayEventData EventData)
+{
+	
+}
+	
+
