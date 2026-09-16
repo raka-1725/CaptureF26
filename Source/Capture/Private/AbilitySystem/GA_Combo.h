@@ -24,4 +24,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, category = "Animation")
 	UAnimMontage* ComboMontage;
 
+	UFUNCTION()
+	void HandleComboChange(FGameplayEventData EventData);
+	
+	FName NextComboName;
 };
