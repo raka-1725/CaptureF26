@@ -16,6 +16,8 @@ class UAN_SendGameplayEvent : public UAnimNotify
 	GENERATED_BODY()
 public:
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference &EventReference) override;
+	FString GetNotifyName_Implementation() const;
+
 private:
 	UPROPERTY(EditAnywhere, Category="GameplayTag")
 	FGameplayTag EventTag;
