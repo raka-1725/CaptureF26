@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystem/CAbilityInputID.h"
 #include "Characters/CCharacter.h"
 #include "CPlayerCharacter.generated.h"
 
@@ -31,8 +32,12 @@ private:
 	//	   Input	//
 	//--------------//
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TMap<ECAbilityInputID, class UInputAction*> GameplayAbilityInputActions;
 	void HandleLookInput(const struct FInputActionValue& InputActionValue);
 	void HandleMoveInput(const struct FInputActionValue& InputActionValue);
+	
+	void HandleAbilityInputAction(const struct FInputActionValue& InputActionValue, ECAbilityInputID InputID);
 	
 	FVector GetRightDirection() const;
 	FVector GetLookFwdDirection() const;
