@@ -14,7 +14,7 @@ void UAN_SendTargetGroup::Notify(USkeletalMeshComponent* MeshComp, UAnimSequence
 	
 	if (TargetSocketNames.Num() <= 0) return;
 	
-	if (MeshComp->GetOwner() || !UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(MeshComp->GetOwner())) return;
+	if (!MeshComp->GetOwner() || !UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(MeshComp->GetOwner())) return;
 	
 	FGameplayEventData Data;
 	
@@ -26,7 +26,7 @@ void UAN_SendTargetGroup::Notify(USkeletalMeshComponent* MeshComp, UAnimSequence
 		FVector EndLoc = MeshComp->GetSocketLocation(TargetSocketNames[i]);
 		
 		LocationInfo->SourceLocation.LiteralTransform.SetLocation(StartLoc);
-		LocationInfo->SourceLocation.LiteralTransform.SetLocation(EndLoc);
+		LocationInfo->TargetLocation.LiteralTransform.SetLocation(EndLoc);
 		
 		Data.TargetData.Add(LocationInfo);
 	}
