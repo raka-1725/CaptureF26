@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Capture/Capture.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
@@ -17,10 +18,13 @@ ACPlayerCharacter::ACPlayerCharacter()
 	ViewCam->SetupAttachment(CameraBoom,USpringArmComponent::SocketName);
 	
 	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->ProbeChannel = ECC_CameraBoom;
 	bUseControllerRotationYaw  = false;
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(720.0f);
+	
+	
 }
 
 void ACPlayerCharacter::PawnClientRestart()
