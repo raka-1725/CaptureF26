@@ -11,6 +11,9 @@
 UGA_Combo::UGA_Combo()
 {
 	AbilityTags.AddTag(TAG_ABILITY_BASICATTACK);
+	
+	SetAssetTags(FGameplayTagContainer(TAG_ABILITY_BASICATTACK));
+	
 	BlockAbilitiesWithTag.AddTag(TAG_ABILITY_BASICATTACK);
 }
 
@@ -95,7 +98,8 @@ void UGA_Combo::HandleComboInputPress(float TimeWaited)
 
 void UGA_Combo::DoDamage(FGameplayEventData EventData)
 {
-	
+	UE_LOG(LogTemp,Warning,TEXT("DoDamage"));
+	TArray<FHitResult> HitResults = GetHitResultsFromSweepLocationData(EventData.TargetData, 30.0f, true);
 }
 	
 
