@@ -20,6 +20,9 @@ public:
 	ATTRIBUTE_ACCESSORS_BASIC(UCAttributeSet, MaxHealth)
 	ATTRIBUTE_ACCESSORS_BASIC(UCAttributeSet, Mana)
 	ATTRIBUTE_ACCESSORS_BASIC(UCAttributeSet, MaxMana)
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
 private:
 	UPROPERTY(ReplicatedUsing = OnRep_Health)
 	FGameplayAttributeData Health;

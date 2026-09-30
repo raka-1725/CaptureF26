@@ -4,11 +4,17 @@
 #include "Characters/CCharacter.h"
 
 #include "AbilitySystem/CAbilitySystemComponent.h"
+#include "AbilitySystem/CAbilitySystemNativeTags.h"
 #include "AbilitySystem/CAttributeSet.h"
+#include "AbilitySystem/CAbilitySystemNativeTags.h"
 #include "Capture/Capture.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Widgets/OverheadStatusGauge.h"
+
+
+
 //#include "AbilitySystemComponent.h"
 
 // Sets default values
@@ -26,6 +32,14 @@ ACCharacter::ACCharacter()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_CameraBoom, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_CameraBoom, ECR_Ignore);
 }
+
+void ACCharacter::BindGASDelegates()
+{
+	if (bGASDelegateBound || !AbilitySystemComponent) return;
+	bGASDelegateBound = true;
+	AbilitySystemComponent->RegisterGameplayTagEvent(TAG_STAT_DEAD).AddUObject(this, &ACCharacter::DeathTagUpdated);
+}
+
 
 void ACCharacter::ServerSideInit()
 {
@@ -51,6 +65,7 @@ void ACCharacter::BeginPlay()
 		AbilitySystemComponent->AddAttributeSetSubobject(CAttributeSet);
 	}*/
 	ConfigureOverHeadWidgetComponent();
+	BindGASDelegates();
 }
 
 // Called every frame
@@ -70,6 +85,57 @@ void ACCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 UAbilitySystemComponent* ACCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void ACCharacter::StartDeathSequence()
+{
+	UE_LOG(LogTemp, Warning, TEXT("StartDeathSequence"));
+	PlayDeathMontage();
+	
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	APlayerController* PlayerController = GetController<APlayerController>();
+	if (PlayerController)
+	{
+		DisableInput(PlayerController);
+	}
+}
+
+void ACCharacter::Respawn()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Respawn"));
+	
+	PlayRespawnMontage();
+	
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	
+	APlayerController* PlayerController = GetController<APlayerController>();
+	if (PlayerController)
+	{
+		EnableInput(PlayerController);
+	}
+	
+	CAttributeSet->SetHealth(CAttributeSet->GetMaxHealth());
+	
+}
+
+void ACCharacter::PlayDeathMontage()
+{
+	if (DeathMontage)
+	{
+		PlayAnimMontage(DeathMontage);
+	}
+}
+
+void ACCharacter::PlayRespawnMontage()
+{
+	if (RespawnMontage)
+	{
+		PlayAnimMontage(RespawnMontage);
+	}
 }
 
 void ACCharacter::ConfigureOverHeadWidgetComponent()
@@ -101,5 +167,17 @@ void ACCharacter::PossessedBy(AController* NewController)
 	if (NewController && !NewController->IsPlayerController())
 	{
 		ServerSideInit();
+	}
+}
+
+void ACCharacter::DeathTagUpdated(const struct FGameplayTag Tag, int32 Count)
+{
+	if (Count != 0)
+	{
+		StartDeathSequence();
+	}
+	else
+	{
+		Respawn();
 	}
 }
