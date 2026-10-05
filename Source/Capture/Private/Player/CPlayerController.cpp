@@ -1,9 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Player/CPlayerController.h"
 #include "Player/CPlayerCharacter.h"
 #include "Widgets/GameplayWidget.h"
+#include "Player/CPlayerController.h"
+
+
+void ACPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ACPlayerController, TeamId);
+}
 
 void ACPlayerController::OnPossess(APawn* NewPawn)
 {
@@ -37,4 +44,14 @@ void ACPlayerController::SpawnGameplayWidget()
 			GameplayWidget->AddToViewport();
 		}
 	}
+}
+
+void ACPlayerController::SetGenericTeamId(const FGenericTeamId& NewTeamID)
+{
+	TeamId = NewTeamID;
+}
+
+FGenericTeamId ACPlayerController::GetGenericTeamId() const
+{
+	return TeamId;
 }

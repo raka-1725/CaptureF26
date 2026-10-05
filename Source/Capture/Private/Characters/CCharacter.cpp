@@ -11,6 +11,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "Widgets/OverheadStatusGauge.h"
 
 
@@ -31,6 +32,12 @@ ACCharacter::ACCharacter()
 	
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_CameraBoom, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_CameraBoom, ECR_Ignore);
+}
+
+void ACCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ACCharacter, TeamId);
 }
 
 void ACCharacter::BindGASDelegates()
@@ -107,8 +114,8 @@ void ACCharacter::Respawn()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Respawn"));
 	
+	SetRagdollEnabled(false);
 	PlayRespawnMontage();
-	
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	
@@ -117,17 +124,43 @@ void ACCharacter::Respawn()
 	{
 		EnableInput(PlayerController);
 	}
-	
+	//both server and client
 	CAttributeSet->SetHealth(CAttributeSet->GetMaxHealth());
+	StopAnimMontage(DeathMontage);
 	
 }
+
+void ACCharacter::SetRagdollEnabled(bool bIsEnabled)
+{
+	if (bIsEnabled)
+	{
+		SkeletalMeshRelativeTransform = GetMesh()->GetRelativeTransform();
+		GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		GetMesh()->SetSimulatePhysics(true);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	}
+	else
+	{
+		GetMesh()->SetSimulatePhysics(false);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->AttachToComponent(GetRootComponent(),FAttachmentTransformRules::KeepRelativeTransform);
+		GetMesh()->SetRelativeTransform(SkeletalMeshRelativeTransform);
+	}
+}
+
 
 void ACCharacter::PlayDeathMontage()
 {
 	if (DeathMontage)
 	{
-		PlayAnimMontage(DeathMontage);
+		float DeathAnimationDuration = PlayAnimMontage(DeathMontage);
+		GetWorldTimerManager().SetTimer(DeathAnimationTimerHandle, this, &ACCharacter::DeathAnimationFinished, DeathAnimationDuration - DeathAnimationTimeOffset);
 	}
+}
+void ACCharacter::DeathAnimationFinished()
+{
+	if (IsDead())
+		SetRagdollEnabled(true);
 }
 
 void ACCharacter::PlayRespawnMontage()
@@ -156,6 +189,7 @@ void ACCharacter::ConfigureOverHeadWidgetComponent()
 	OverHeadWidgetComponent->SetHiddenInGame(false);
 }
 
+
 bool ACCharacter::IsLocallyControlledByPlayer() const
 {
 	//checking if it is local AND if it is player controller NOT AI
@@ -180,4 +214,18 @@ void ACCharacter::DeathTagUpdated(const struct FGameplayTag Tag, int32 Count)
 	{
 		Respawn();
 	}
+}
+
+bool ACCharacter::IsDead() const
+{
+	return AbilitySystemComponent->HasMatchingGameplayTag(TAG_STAT_DEAD);
+}
+void ACCharacter::SetGenericTeamId(const FGenericTeamId& NewTeamID)
+{
+	TeamId = NewTeamID;
+}
+
+FGenericTeamId ACCharacter::GetGenericTeamId() const
+{
+	return TeamId;
 }
