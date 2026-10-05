@@ -10,6 +10,7 @@
 #include "AbilitySystem/CAbilitySystemNativeTags.h"
 #include "GameplayTagsManager.h"
 #include "Misc/OutputDeviceNull.h"
+#include "Player/CPlayerCharacter.h"
 
 UGA_Combo::UGA_Combo()
 {
@@ -106,6 +107,8 @@ void UGA_Combo::DoDamage(FGameplayEventData EventData)
 
 	for (const FHitResult& HitResult : HitResults)
 	{
+		
+		
 		TSubclassOf<UGameplayEffect> DamageEffect = GetDamageEffectForCurrentCombo();
 		
 		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffect, GetAbilityLevel(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo()));

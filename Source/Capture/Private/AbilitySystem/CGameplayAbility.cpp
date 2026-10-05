@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/CGameplayAbility.h"
 
+#include "GenericTeamAgentInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 TArray<FHitResult> UCGameplayAbility::GetHitResultsFromSweepLocationData(

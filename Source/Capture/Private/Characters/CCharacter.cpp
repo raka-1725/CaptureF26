@@ -32,6 +32,8 @@ ACCharacter::ACCharacter()
 	
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_CameraBoom, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_CameraBoom, ECR_Ignore);
+	
+	GetTeamAttitudeTowards();
 }
 
 void ACCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -128,7 +130,10 @@ void ACCharacter::Respawn()
 	//both server and client
 	CAttributeSet->SetHealth(CAttributeSet->GetMaxHealth());
 	StopAnimMontage(DeathMontage);
-	
+	if (HasAuthority() && GetController()->StartSpot.IsValid())
+	{
+		SetActorTransform(GetController()->StartSpot->GetActorTransform());
+	}
 }
 
 void ACCharacter::SetRagdollEnabled(bool bIsEnabled)
