@@ -15,6 +15,12 @@ void ACPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetimeProper
 void ACPlayerController::OnPossess(APawn* NewPawn)
 {
 	Super::OnPossess(NewPawn);
+	
+	if (IGenericTeamAgentInterface* PawnTeamInterface = Cast<IGenericTeamAgentInterface>(NewPawn))
+	{
+		PawnTeamInterface->SetGenericTeamId(GetGenericTeamId());
+	}
+	
 	CPlayerCharacter = Cast<ACPlayerCharacter>(NewPawn);
 	if (CPlayerCharacter)
 	{
