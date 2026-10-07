@@ -103,7 +103,7 @@ void UGA_Combo::HandleComboInputPress(float TimeWaited)
 void UGA_Combo::DoDamage(FGameplayEventData EventData)
 {
 	UE_LOG(LogTemp,Warning,TEXT("DoDamage"));
-	TArray<FHitResult> HitResults = GetHitResultsFromSweepLocationData(EventData.TargetData, 30.0f, true);
+	TArray<FHitResult> HitResults = GetHitResultsFromSweepLocationData(EventData.TargetData, 30.0f);
 
 	for (const FHitResult& HitResult : HitResults)
 	{

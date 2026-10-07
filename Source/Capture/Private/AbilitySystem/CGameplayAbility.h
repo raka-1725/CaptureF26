@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "Abilities/GameplayAbility.h"
 #include "CGameplayAbility.generated.h"
 
@@ -14,5 +15,5 @@ class UCGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
 protected:
-	TArray<FHitResult> GetHitResultsFromSweepLocationData(const FGameplayAbilityTargetDataHandle& TargetDataHandle,float SphereSweepRadius, bool bDrawDebug = false, bool bIgnoreSelf = true) const;
+	TArray<FHitResult> GetHitResultsFromSweepLocationData(const FGameplayAbilityTargetDataHandle& TargetDataHandle, float SphereSweepRadius, ETeamAttitude::Type = ETeamAttitude::Hostile, bool bDrawDebug = false, bool bIgnoreSelf = true) const;
 };

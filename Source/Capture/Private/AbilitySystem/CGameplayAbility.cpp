@@ -7,11 +7,13 @@
 #include "Kismet/KismetSystemLibrary.h"
 
 TArray<FHitResult> UCGameplayAbility::GetHitResultsFromSweepLocationData(
-	const FGameplayAbilityTargetDataHandle& TargetDataHandle, float SphereSweepRadius, bool bDrawDebug,
+	const FGameplayAbilityTargetDataHandle& TargetDataHandle, float SphereSweepRadius,  ETeamAttitude::Type TargetTeamAttitude, bool bDrawDebug,
 	bool bIgnoreSelf) const
 {
 	TArray<FHitResult> OutResults;
 	TSet<AActor*> HitActors;
+	
+	IGenericTeamAgentInterface* OwnerTeamInterface = Cast<IGenericTeamAgentInterface>(GetAvatarActorFromActorInfo());
 	
 	for(const TSharedPtr<FGameplayAbilityTargetData>& TargetData : TargetDataHandle.Data)
 	{
@@ -33,6 +35,13 @@ TArray<FHitResult> UCGameplayAbility::GetHitResultsFromSweepLocationData(
 		{
 			if (HitActors.Contains(Result.GetActor())){ continue; }
 			
+			if (OwnerTeamInterface)
+			{
+				if (OwnerTeamInterface->GetTeamAttitudeTowards(*Result.GetActor()) != TargetTeamAttitude)
+				{
+					continue;
+				}
+			}
 			
 			HitActors.Add(Result.GetActor());
 			

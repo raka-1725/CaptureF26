@@ -8,7 +8,7 @@
 
 bool UGC_Hit_Crunch_React::OnExecute_Implementation(AActor* MyTarget, const FGameplayCueParameters& Parameters) const
 {
-	UAnimInstance* AnimInstance = Cast<ACPlayerCharacter>(MyTarget)->GetMesh()->GetAnimInstance();
+	UAnimInstance* AnimInstance = Cast<ACCharacter>(MyTarget)->GetMesh()->GetAnimInstance();
 	if (AnimInstance)
 	{
 		AnimInstance->Montage_Play(HitAnimMontage);
