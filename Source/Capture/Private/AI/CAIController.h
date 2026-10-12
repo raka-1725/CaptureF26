@@ -32,6 +32,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
 	FName BlackboardTargetKeyName = "Target";
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
+	FName BlackboardPatrolCenterKeyName = "PatrolCenter";
+	
 	UFUNCTION()
 	void TargetPerceptionUpdated(AActor* TargetActor, FAIStimulus Stimulus);
 	
@@ -43,4 +46,6 @@ private:
 	void SetCurrentTarget(AActor* NewTarget);
 	
 	AActor* GetNextPerceivedActor() const;
+	
+	void ForgetActorIfDead(AActor* ActorToForget);
 };

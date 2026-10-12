@@ -7,6 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "GameplayTagContainer.h"
 #include "GenericTeamAgentInterface.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "CCharacter.generated.h"
 
 UCLASS()
@@ -53,10 +54,11 @@ private:
 	//------------------//
 	// Death & Respawn	//
 	//------------------//
+public:
+	bool IsDead() const;
 private:
 	void StartDeathSequence();
 	void Respawn();
-	bool IsDead() const;
 	
 	void SetRagdollEnabled(bool bIsEnabled);
 	
@@ -97,4 +99,16 @@ private:
 	UPROPERTY(Replicated)
 	FGenericTeamId TeamId;
 
+	//-------------//
+	//    AI Percep	  //
+	//-------------//
+	
+	
+private:
+	UPROPERTY()
+	class UAIPerceptionStimuliSourceComponent* AIPerceptionStimuliSourceComponent;
+	
+	void SetAIPerceptionStimuliSourceEnabled(bool bIsStimuliSourceEnabled);
+	
+	
 };
