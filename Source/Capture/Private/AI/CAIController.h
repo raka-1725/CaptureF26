@@ -35,6 +35,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
 	FName BlackboardPatrolCenterKeyName = "PatrolCenter";
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
+	FName BlackboardLastSeenLocationKeyName = "LastSeenLocation";
+	
 	UFUNCTION()
 	void TargetPerceptionUpdated(AActor* TargetActor, FAIStimulus Stimulus);
 	

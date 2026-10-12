@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "MyBTTask_FindNextPatrolPoint.generated.h"
+#include "BTTask_FindNextPatrolPoint.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UMyBTTask_FindNextPatrolPoint : public UBTTaskNode
+class UBTTask_FindNextPatrolPoint : public UBTTaskNode
 {
 	GENERATED_BODY()
 	

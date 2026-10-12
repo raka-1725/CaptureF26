@@ -69,7 +69,14 @@ void ACAIController::TargetForgotten(AActor* ForgottenActor)
 	if (GetCurrentTarget() == ForgottenActor)
 	{
 		SetCurrentTarget(GetNextPerceivedActor());
+			
 	}
+	if (!GetCurrentTarget() && GetBlackboardComponent())
+	{
+		GetBlackboardComponent()->SetValueAsVector(BlackboardLastSeenLocationKeyName, ForgottenActor->GetActorLocation());
+	}
+	
+	
 }
 
 void ACAIController::ForgetActorIfDead(AActor* ActorToForget)
