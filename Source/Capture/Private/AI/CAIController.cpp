@@ -135,6 +135,11 @@ const UObject* ACAIController::GetCurrentTarget() const
 
 void ACAIController::SetCurrentTarget(AActor* NewTarget)
 {
+	if (NewTarget != CurrentTarget)
+	{
+		CurrentTarget = NewTarget;
+		StateTreeComponent->SendStateTreeEvent(TAG_PERCEPTION_TARGET_CHANGE);
+	}
 	CurrentTarget = NewTarget;
 	if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
 	{
