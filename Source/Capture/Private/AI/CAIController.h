@@ -54,4 +54,8 @@ private:
 	AActor* GetNextPerceivedActor() const;
 	
 	void ForgetActorIfDead(AActor* ActorToForget);
+	
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess="true"))
+	AActor* CurrentTarget;
+	
 };

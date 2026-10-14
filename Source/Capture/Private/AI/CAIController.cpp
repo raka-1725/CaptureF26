@@ -130,11 +130,12 @@ const UObject* ACAIController::GetCurrentTarget() const
 		return BlackboardComponent->GetValueAsObject(BlackboardTargetKeyName);
 	}
 	
-	return nullptr;
+	return CurrentTarget;
 }
 
 void ACAIController::SetCurrentTarget(AActor* NewTarget)
 {
+	CurrentTarget = NewTarget;
 	if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
 	{
 		if (NewTarget)
