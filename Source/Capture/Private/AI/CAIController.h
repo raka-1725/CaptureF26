@@ -28,7 +28,10 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
 	class UBehaviorTree* BehaviorTree;
-
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
+	class UStateTreeAIComponent* StateTreeComponent;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
 	FName BlackboardTargetKeyName = "Target";
 	

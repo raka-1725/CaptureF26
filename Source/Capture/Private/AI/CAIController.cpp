@@ -7,6 +7,8 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
+#include "Components/StateTreeAIComponent.h"
+
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/CAbilitySystemNativeTags.h"
@@ -28,6 +30,7 @@ ACAIController::ACAIController()
 	SightConfig->PeripheralVisionAngleDegrees = 180.0f;
 	
 	AIPerceptionComponent->ConfigureSense(*SightConfig);
+	StateTreeComponent = CreateDefaultSubobject<UStateTreeAIComponent>("State Tree Component");
 }
 
 void ACAIController::OnPossess(APawn* NewPawn)
@@ -46,7 +49,11 @@ void ACAIController::OnPossess(APawn* NewPawn)
 void ACAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	RunBehaviorTree(BehaviorTree);
+	if (BehaviorTree)
+	{
+		RunBehaviorTree(BehaviorTree);
+		StateTreeComponent->Deactivate();
+	}
 	
 	AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ACAIController::TargetPerceptionUpdated);
 	AIPerceptionComponent->OnTargetPerceptionForgotten.AddDynamic(this, &ACAIController::TargetForgotten);
