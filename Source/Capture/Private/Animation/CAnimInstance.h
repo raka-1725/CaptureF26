@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Animation/AnimInstance.h"
 #include "CAnimInstance.generated.h"
 
@@ -51,6 +52,15 @@ private:
 	
 	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
 	float SmoothedYawSpeed;
+
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	bool bIsAiming;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	float ForwardSpeed;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	float RightSpeed;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	float YawSpeedSmoothLerpRate = 2.0f;
@@ -59,4 +69,6 @@ private:
 	
 	UPROPERTY()
 	FRotator LookRotationOffset;
+	
+	void AimTagUpdated(const FGameplayTag Tag, int32 NewCount);
 };

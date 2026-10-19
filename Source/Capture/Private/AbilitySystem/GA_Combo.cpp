@@ -9,16 +9,12 @@
 #include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
 #include "AbilitySystem/CAbilitySystemNativeTags.h"
 #include "GameplayTagsManager.h"
-#include "Misc/OutputDeviceNull.h"
-#include "Player/CPlayerCharacter.h"
 
 UGA_Combo::UGA_Combo()
 {
 	AbilityTags.AddTag(TAG_ABILITY_BASICATTACK);
 	SetAssetTags(FGameplayTagContainer(TAG_ABILITY_BASICATTACK));
 	BlockAbilitiesWithTag.AddTag(TAG_ABILITY_BASICATTACK);
-	
-	
 }
 
 void UGA_Combo::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -31,6 +27,7 @@ void UGA_Combo::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const F
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 		return;
 	}
+	NextComboName = NAME_None;
 	UE_LOG(LogTemp,Warning,TEXT("Casting combo ability"))
 	
 	if (HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo))

@@ -13,8 +13,9 @@
 UCLASS()
 class UCGameplayAbility : public UGameplayAbility
 {
-	UCGameplayAbility();
 	GENERATED_BODY()
+public:
+	UCGameplayAbility();
 protected:
 	TArray<FHitResult> GetHitResultsFromSweepLocationData(const FGameplayAbilityTargetDataHandle& TargetDataHandle, float SphereSweepRadius, ETeamAttitude::Type = ETeamAttitude::Hostile, bool bDrawDebug = false, bool bIgnoreSelf = true) const;
 };

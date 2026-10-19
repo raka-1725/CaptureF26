@@ -13,6 +13,7 @@ UCLASS()
 class UGA_GroundBlast : public UCGameplayAbility
 {
 	GENERATED_BODY()
+	UGA_GroundBlast();
 	public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivateInfo, const FGameplayEventData* TriggerEventData) override;
 	
