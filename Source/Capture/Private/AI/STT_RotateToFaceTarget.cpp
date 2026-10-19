@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "AI/STT_RotateToFaceTarget.h"
 
 #include "AIController.h"
 #include "StateTreeExecutionContext.h"
-#include "AI/STT_RotateToFaceTarget.h"
 
 
 EStateTreeRunStatus FSTT_RotateToFaceTarget::EnterState(FStateTreeExecutionContext& context, const FStateTreeTransitionResult& Transition) const

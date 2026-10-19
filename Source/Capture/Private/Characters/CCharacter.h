@@ -46,7 +46,7 @@ private:
 	void BindGASDelegates();
 	void DeathTagUpdated(const struct FGameplayTag Tag, int32 Count);
 	bool bGASDelegateBound;	
-	UPROPERTY(VisibleDefaultsOnly, Category = "Ability System")
+	UPROPERTY(VisibleAnywhere, Category = "Ability System", meta = (AllowPrivateAccess = true))
 	class UCAbilitySystemComponent* AbilitySystemComponent;
 	
 	UPROPERTY()
