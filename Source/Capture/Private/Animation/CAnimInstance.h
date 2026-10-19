@@ -19,6 +19,9 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 	
 	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
+	FORCEINLINE bool ShouldDoFullBody() const { return !IsMoving() && !bIsAiming; }
+	
+	UFUNCTION(BlueprintCallable, meta=(BlueprintThreadSafe))
 	//FORCEINLINE -> run in header and force run, good for performance.
 	FORCEINLINE bool IsMoving() const {return Speed > 0; }
 	
