@@ -19,6 +19,12 @@
 
 //#include "AbilitySystemComponent.h"
 
+void ACCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ACCharacter, TeamId);
+}
+
 // Sets default values
 ACCharacter::ACCharacter()
 {
@@ -32,17 +38,14 @@ ACCharacter::ACCharacter()
 	OverHeadWidgetComponent->SetupAttachment(GetRootComponent());
 	
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_CameraBoom, ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Target, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_CameraBoom, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Target, ECR_Ignore);
 	
 	AIPerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>("AI Perception Source Component");
 	
 }
 
-void ACCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(ACCharacter, TeamId);
-}
 
 void ACCharacter::BindGASDelegates()
 {
