@@ -20,4 +20,13 @@ class UGA_GroundBlast : public UCGameplayAbility
 	private:
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* CastMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Targeting")
+	TSubclassOf<class ATA_GroundPick> TargetActorClass;
+	
+	UFUNCTION()
+	void TargetConfirmed(const FGameplayAbilityTargetDataHandle& TargetDataHandle);
+	
+	UFUNCTION()
+	void TargetCancelled(const FGameplayAbilityTargetDataHandle& TargetDataHandle);
 };
