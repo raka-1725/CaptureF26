@@ -237,6 +237,12 @@ void ACCharacter::SetIsAiming(bool bIsAiming)
 {
 	bUseControllerRotationYaw = bIsAiming;
 	GetCharacterMovement()->bOrientRotationToMovement = !bIsAiming;
+	OnAimStatChanged(bIsAiming);
+}
+
+void ACCharacter::OnAimStatChanged(bool bNewIsAiming)
+{
+	//override in child class
 }
 
 bool ACCharacter::IsDead() const

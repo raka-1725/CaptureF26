@@ -47,6 +47,7 @@ private:
 	void DeathTagUpdated(const struct FGameplayTag Tag, int32 Count);
 	void AimTagUpdated(const struct FGameplayTag Tag, int32 Count);
 	void SetIsAiming(bool bIsAiming);
+	virtual void OnAimStatChanged(bool bNewIsAiming);
 
 	bool bGASDelegateBound;	
 	UPROPERTY(VisibleAnywhere, Category = "Ability System", meta = (AllowPrivateAccess = true))
