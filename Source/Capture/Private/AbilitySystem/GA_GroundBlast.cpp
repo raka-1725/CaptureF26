@@ -48,10 +48,17 @@ void UGA_GroundBlast::TargetConfirmed(const FGameplayAbilityTargetDataHandle& Ta
 {
 	UE_LOG(LogTemp, Warning, TEXT("TargetConfirmed"));
 	
+	/*
 	for (AActor* TargetActor : UAbilitySystemBlueprintLibrary::GetAllActorsFromTargetData(TargetDataHandle))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Found Target: %s"), *TargetActor->GetName());
 	}
+	*/
+	if (K2_CommitAbility())
+	{
+		BP_ApplyGameplayEffectToTarget(TargetDataHandle, DamageEffect);
+	}
+	BP_ApplyGameplayEffectToTarget(TargetDataHandle, DamageEffect);
 	
 	K2_EndAbility();
 	

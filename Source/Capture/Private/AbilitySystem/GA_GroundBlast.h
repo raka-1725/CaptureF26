@@ -24,6 +24,9 @@ class UGA_GroundBlast : public UCGameplayAbility
 	UPROPERTY(EditDefaultsOnly, Category = "Targeting")
 	TSubclassOf<class ATA_GroundPick> TargetActorClass;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Effect")
+	TSubclassOf<class UGameplayEffect> DamageEffect;
+	
 	UFUNCTION()
 	void TargetConfirmed(const FGameplayAbilityTargetDataHandle& TargetDataHandle);
 	
