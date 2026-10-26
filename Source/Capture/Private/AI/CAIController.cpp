@@ -43,6 +43,12 @@ void ACAIController::OnPossess(APawn* NewPawn)
 	{
 		PawnTeamInterface->SetGenericTeamId(GetGenericTeamId());
 	}
+	
+	UAbilitySystemComponent* PawnASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(NewPawn);
+	if (PawnASC)
+	{
+		PawnASC->RegisterGameplayTagEvent(TAG_STAT_DEAD).AddUObject(this, &ACAIController::PawnDeadTagUpdated);
+	}
 }
 
 
@@ -104,6 +110,40 @@ void ACAIController::ForgetActorIfDead(AActor* ActorToForget)
 				Stimulus.SetStimulusAge(TNumericLimits<float>::Max());
 			}
 		}
+	}
+}
+
+void ACAIController::ClearAndDisableAllSenses()
+{
+	AIPerceptionComponent->AgeStimuli(TNumericLimits<float>::Max());	
+	
+	for (auto SenseConfigIt = AIPerceptionComponent->GetSensesConfigIterator(); SenseConfigIt; ++SenseConfigIt)
+	{
+		AIPerceptionComponent->SetSenseEnabled((*SenseConfigIt)->GetSenseImplementation(),false);
+	}
+	
+	SetCurrentTarget(nullptr);
+}
+
+void ACAIController::EnableAllSenses()
+{
+	for (auto SenseConfigIt = AIPerceptionComponent->GetSensesConfigIterator(); SenseConfigIt; ++SenseConfigIt)
+	{
+		AIPerceptionComponent->SetSenseEnabled((*SenseConfigIt)->GetSenseImplementation(),true);
+	}
+}
+
+void ACAIController::PawnDeadTagUpdated(const FGameplayTag Tag, int32 NewCount)
+{
+	if (NewCount != 0)
+	{
+		GetBrainComponent()->StopLogic("Dead");
+		ClearAndDisableAllSenses();
+	}
+	else
+	{
+		GetBrainComponent()->StartLogic();
+		EnableAllSenses();
 	}
 }
 

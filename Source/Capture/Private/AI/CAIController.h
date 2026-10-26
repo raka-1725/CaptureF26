@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Perception/AIPerceptionComponent.h"
+#include "GameplayTagContainer.h"
 #include "CAIController.generated.h"
 
 /**
@@ -57,5 +58,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess="true"))
 	AActor* CurrentTarget;
+	
+	void ClearAndDisableAllSenses();
+	void EnableAllSenses();
+	void PawnDeadTagUpdated(const FGameplayTag Tag, int32 NewCount);
 	
 };
