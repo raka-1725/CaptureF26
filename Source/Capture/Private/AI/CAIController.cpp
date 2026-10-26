@@ -48,6 +48,7 @@ void ACAIController::OnPossess(APawn* NewPawn)
 	if (PawnASC)
 	{
 		PawnASC->RegisterGameplayTagEvent(TAG_STAT_DEAD).AddUObject(this, &ACAIController::PawnDeadTagUpdated);
+		PawnASC->RegisterGameplayTagEvent(TAG_STAT_STUN).AddUObject(this, &ACAIController::PawnStunTagUpdated);
 	}
 }
 
@@ -139,11 +140,30 @@ void ACAIController::PawnDeadTagUpdated(const FGameplayTag Tag, int32 NewCount)
 	{
 		GetBrainComponent()->StopLogic("Dead");
 		ClearAndDisableAllSenses();
+		bCachedIsPawnDead = true;
 	}
 	else
 	{
 		GetBrainComponent()->StartLogic();
 		EnableAllSenses();
+		bCachedIsPawnDead = false;
+	}
+}
+
+void ACAIController::PawnStunTagUpdated(const FGameplayTag Tag, int32 NewCount)
+{
+	if (bCachedIsPawnDead)
+	{
+		return;
+	}
+	
+	if (NewCount != 0)
+	{
+		GetBrainComponent()->StopLogic("Stun");
+	}
+	else
+	{
+		GetBrainComponent()->StartLogic();
 	}
 }
 

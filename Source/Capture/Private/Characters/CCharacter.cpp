@@ -53,6 +53,7 @@ void ACCharacter::BindGASDelegates()
 	bGASDelegateBound = true;
 	AbilitySystemComponent->RegisterGameplayTagEvent(TAG_STAT_DEAD).AddUObject(this, &ACCharacter::DeathTagUpdated);
 	AbilitySystemComponent->RegisterGameplayTagEvent(TAG_STAT_AIMING).AddUObject(this, &ACCharacter::AimTagUpdated);
+	AbilitySystemComponent->RegisterGameplayTagEvent(TAG_STAT_STUN).AddUObject(this, &ACCharacter::StunTagUpdated);
 }
 
 
@@ -99,6 +100,22 @@ void ACCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+void ACCharacter::SetInputEnabledFromPlayerController(bool bNewInputEnabled)
+{
+	APlayerController* PlayerController = GetController<APlayerController>();
+	if (PlayerController)
+	{
+		if (bNewInputEnabled)
+		{
+			EnableInput(PlayerController);
+		}
+		else
+		{
+			DisableInput(PlayerController);
+		}
+	}
+}
+
 UAbilitySystemComponent* ACCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -118,6 +135,11 @@ void ACCharacter::StartDeathSequence()
 	if (PlayerController)
 	{
 		DisableInput(PlayerController);
+	}
+	
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->CancelAllAbilities();
 	}
 }
 
@@ -234,6 +256,27 @@ void ACCharacter::DeathTagUpdated(const struct FGameplayTag Tag, int32 Count)
 void ACCharacter::AimTagUpdated(const struct FGameplayTag Tag, int32 Count)
 {
 	SetIsAiming(Count != 0);
+}
+
+void ACCharacter::StunTagUpdated(const struct FGameplayTag Tag, int32 Count)
+{
+	if (IsDead())
+	{
+		return;
+	}
+	
+	bool bIsStun = Count != 0;
+	
+	if (bIsStun)
+	{
+		PlayAnimMontage(StunMontage);
+	}
+	else
+	{
+		StopAnimMontage(StunMontage);
+	}
+	
+	SetInputEnabledFromPlayerController(!bIsStun);
 }
 
 void ACCharacter::SetIsAiming(bool bIsAiming)

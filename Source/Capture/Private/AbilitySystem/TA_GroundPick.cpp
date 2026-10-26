@@ -46,6 +46,13 @@ void ATA_GroundPick::ConfirmTargetingAndContinue()
 	
 	FGameplayAbilityTargetDataHandle TargetData = 
 		UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActorArray(TargetActors.Array(), false);
+	
+	FGameplayAbilityTargetData_SingleTargetHit* HitLoc = new FGameplayAbilityTargetData_SingleTargetHit;
+	HitLoc->HitResult.ImpactPoint = GetActorLocation();
+	HitLoc->HitResult.ImpactNormal = FVector::UpVector;
+	
+	TargetData.Add(HitLoc);
+	
 	TargetDataReadyDelegate.Broadcast(TargetData);
 }
 

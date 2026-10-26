@@ -10,7 +10,8 @@ bool UGC_HitVFX::OnExecute_Implementation(AActor* MyTarget, const FGameplayCuePa
 	const FHitResult* HitResult = Parameters.EffectContext.GetHitResult();
 	if (HitResult)
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VFX, HitResult->ImpactPoint,  UKismetMathLibrary::MakeRotFromX(HitResult->ImpactNormal));
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VFX, HitResult->ImpactPoint,  
+			UKismetMathLibrary::MakeRotFromX(HitResult->ImpactNormal), FVector{VFXScale});
 	UE_LOG(LogTemp, Warning, TEXT("VFX c++ gameplay cue"));
 	}
 	return true;

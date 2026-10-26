@@ -67,8 +67,13 @@ void UGA_GroundBlast::TargetConfirmed(const FGameplayAbilityTargetDataHandle& Ta
 	if (K2_CommitAbility())
 	{
 		BP_ApplyGameplayEffectToTarget(TargetDataHandle, DamageEffect);
+		FGameplayEffectSpecHandle StunEffectSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffect, GetAbilityLevel(GetCurrentAbilitySpecHandle(),GetCurrentActorInfo()));
+		StunEffectSpecHandle.Data->SetSetByCallerMagnitude(TAG_STAT_STUN, StunDuration);
+		ApplyGameplayEffectSpecToTarget(
+			GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), 
+			StunEffectSpecHandle, TargetDataHandle);
+		
 	}
-	BP_ApplyGameplayEffectToTarget(TargetDataHandle, DamageEffect);
 	
 	K2_EndAbility();
 	

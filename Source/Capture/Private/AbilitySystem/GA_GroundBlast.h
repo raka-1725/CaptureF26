@@ -27,6 +27,12 @@ class UGA_GroundBlast : public UCGameplayAbility
 	UPROPERTY(EditDefaultsOnly, Category = "Effect")
 	TSubclassOf<class UGameplayEffect> DamageEffect;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Effect")
+	TSubclassOf<class UGameplayEffect> StunEffect;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Effect")
+	float StunDuration = 3.0f;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Targetting")
 	float TargetTraceRange = 2000.0f;
 	

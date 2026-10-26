@@ -37,6 +37,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
+private:
+	void SetInputEnabledFromPlayerController(bool bNewInputEnabled);
+	
 	//------------------//
 	// Gameplay Ability //
 	//------------------//
@@ -46,6 +49,8 @@ private:
 	void BindGASDelegates();
 	void DeathTagUpdated(const struct FGameplayTag Tag, int32 Count);
 	void AimTagUpdated(const struct FGameplayTag Tag, int32 Count);
+	void StunTagUpdated(const struct FGameplayTag Tag, int32 Count);
+	
 	void SetIsAiming(bool bIsAiming);
 	virtual void OnAimStatChanged(bool bNewIsAiming);
 
@@ -70,6 +75,9 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Death")
 	UAnimMontage* DeathMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Stun")
+	UAnimMontage* StunMontage;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Death")
 	float DeathAnimationTimeOffset = -3.0f;
