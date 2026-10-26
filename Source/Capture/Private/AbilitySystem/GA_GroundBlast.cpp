@@ -6,6 +6,7 @@
 #include "Abilities/Tasks/AbilityTask_WaitTargetData.h"
 #include "AbilitySystem/CAbilitySystemNativeTags.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "AbilitySystem/TA_GroundPick.h"
 
 UGA_GroundBlast::UGA_GroundBlast()
@@ -73,6 +74,15 @@ void UGA_GroundBlast::TargetConfirmed(const FGameplayAbilityTargetDataHandle& Ta
 			GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), 
 			StunEffectSpecHandle, TargetDataHandle);
 		
+		FGameplayCueParameters BlastingGameplayCueParameters;
+		BlastingGameplayCueParameters.EffectContext = MakeEffectContext(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo());
+		BlastingGameplayCueParameters.EffectContext.AddHitResult(UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 1));
+		
+		//Execute gameplay cue is replicated
+		for (const FGameplayTag& GameplayCueTag : BlastingGameplayCueTags)
+		{
+			GetAbilitySystemComponentFromActorInfo()->ExecuteGameplayCue(GameplayCueTag, BlastingGameplayCueParameters);
+		}
 	}
 	
 	K2_EndAbility();

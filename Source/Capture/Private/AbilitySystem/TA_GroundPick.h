@@ -27,6 +27,9 @@ public:
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Visual")
+	class UDecalComponent* DecalComponent;
+	
 	FVector GetTargetPoint() const;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Targetting")

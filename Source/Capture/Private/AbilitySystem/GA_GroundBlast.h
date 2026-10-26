@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/CGameplayAbility.h"
+#include "GameplayTagContainer.h"
 #include "GA_GroundBlast.generated.h"
 
 /**
@@ -18,6 +19,9 @@ class UGA_GroundBlast : public UCGameplayAbility
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivateInfo, const FGameplayEventData* TriggerEventData) override;
 	
 	private:
+	UPROPERTY(EditDefaultsOnly, Category = "GameplayCue", meta=(categories="Gameplaycue"))
+	FGameplayTagContainer BlastingGameplayCueTags;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* CastMontage;
 	
