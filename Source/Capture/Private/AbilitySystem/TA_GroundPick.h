@@ -19,6 +19,10 @@ public:
 	ATA_GroundPick();
 	
 	virtual void ConfirmTargetingAndContinue() override;
+	void SetTargetAreaRadius(float NewTargetAreaRadius);
+	void SetTargetTraceRange(float NewTargetAreaRange);
+	void SetShouldDrawDebug(bool bNewShouldDrawDebug);
+	void AddTargetTeamAttitude(ETeamAttitude::Type NewAttitude);
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;
@@ -29,7 +33,7 @@ private:
 	float TargetTraceRange = 2000.0f;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Targetting")
-	float TargetRadius = 200.0f;
+	float TargetAreaRadius = 400.0f;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Debug")
 	bool bShouldDrawDebug = true;

@@ -14,7 +14,8 @@ UGA_GroundBlast::UGA_GroundBlast()
 	BlockAbilitiesWithTag.AddTag(TAG_ABILITY_BASICATTACK);
 }
 
-void UGA_GroundBlast::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivateInfo, const FGameplayEventData* TriggerEventData)
+void UGA_GroundBlast::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo
+	, const FGameplayAbilityActivationInfo ActivateInfo, const FGameplayEventData* TriggerEventData)
 {
 	if (!HasAuthorityOrPredictionKey(CurrentActorInfo, &CurrentActivationInfo))
 	{
@@ -40,7 +41,16 @@ void UGA_GroundBlast::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 	
 	AGameplayAbilityTargetActor* TargetActor;
 	WaitTargetData->BeginSpawningActor(this, TargetActorClass, TargetActor);
+	
 	//configure here
+	ATA_GroundPick* GroundPickActor = Cast<ATA_GroundPick>(TargetActor);
+	if (GroundPickActor)
+	{
+		GroundPickActor->SetTargetAreaRadius(TargetAreaRadius);
+		GroundPickActor->SetTargetTraceRange(TargetTraceRange);
+		GroundPickActor->AddTargetTeamAttitude(ETeamAttitude::Hostile);
+		GroundPickActor->SetShouldDrawDebug(bShouldDrawDebug);
+	}
 	WaitTargetData->FinishSpawningActor(this, TargetActor);
 }
 

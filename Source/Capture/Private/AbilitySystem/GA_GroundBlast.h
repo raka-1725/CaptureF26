@@ -27,6 +27,12 @@ class UGA_GroundBlast : public UCGameplayAbility
 	UPROPERTY(EditDefaultsOnly, Category = "Effect")
 	TSubclassOf<class UGameplayEffect> DamageEffect;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Targetting")
+	float TargetTraceRange = 2000.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Targetting")
+	float TargetAreaRadius = 400.0f;
+	
 	UFUNCTION()
 	void TargetConfirmed(const FGameplayAbilityTargetDataHandle& TargetDataHandle);
 	

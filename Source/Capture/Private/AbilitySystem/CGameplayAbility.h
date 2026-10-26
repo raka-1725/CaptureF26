@@ -17,5 +17,10 @@ class UCGameplayAbility : public UGameplayAbility
 public:
 	UCGameplayAbility();
 protected:
-	TArray<FHitResult> GetHitResultsFromSweepLocationData(const FGameplayAbilityTargetDataHandle& TargetDataHandle, float SphereSweepRadius, ETeamAttitude::Type = ETeamAttitude::Hostile, bool bDrawDebug = false, bool bIgnoreSelf = true) const;
+	TArray<FHitResult> GetHitResultsFromSweepLocationData(const FGameplayAbilityTargetDataHandle& TargetDataHandle, 
+		float SphereSweepRadius, ETeamAttitude::Type = ETeamAttitude::Hostile, bool bDrawDebug = false,
+		bool bIgnoreSelf = true) const;
+
+UPROPERTY(EditDefaultsOnly, Category = "Debug")
+bool bShouldDrawDebug = false;
 };

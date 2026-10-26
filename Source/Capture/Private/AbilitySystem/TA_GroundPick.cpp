@@ -21,7 +21,7 @@ void ATA_GroundPick::ConfirmTargetingAndContinue()
 	
 	GetWorld()->OverlapMultiByObjectType(
 		OverlapResults, GetActorLocation(), FQuat::Identity,
-		ObjectQueryParams, FCollisionShape::MakeSphere(TargetRadius));
+		ObjectQueryParams, FCollisionShape::MakeSphere(TargetAreaRadius));
 	
 	TSet<AActor*> TargetActors;
 	IGenericTeamAgentInterface* OwnerAgentInterface = nullptr;
@@ -48,6 +48,27 @@ void ATA_GroundPick::ConfirmTargetingAndContinue()
 		UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActorArray(TargetActors.Array(), false);
 	TargetDataReadyDelegate.Broadcast(TargetData);
 }
+
+void ATA_GroundPick::SetTargetAreaRadius(float NewTargetAreaRadius)
+{
+	TargetAreaRadius = NewTargetAreaRadius;
+}
+
+void ATA_GroundPick::SetTargetTraceRange(float NewTargetAreaRange)
+{
+	TargetTraceRange = NewTargetAreaRange;
+}
+
+void ATA_GroundPick::SetShouldDrawDebug(bool bNewShouldDrawDebug)
+{
+	bShouldDrawDebug = bNewShouldDrawDebug;
+}
+
+void ATA_GroundPick::AddTargetTeamAttitude(ETeamAttitude::Type NewAttitude)
+{
+	TargetTeamAttitude.Add(NewAttitude);
+}
+
 
 void ATA_GroundPick::Tick(float DeltaSeconds)
 {
@@ -85,7 +106,7 @@ FVector ATA_GroundPick::GetTargetPoint() const
 	}
 	if (bShouldDrawDebug)
 	{
-		DrawDebugSphere(GetWorld(), TraceResult.ImpactPoint, TargetRadius, 32, FColor::Red);
+		DrawDebugSphere(GetWorld(), TraceResult.ImpactPoint, TargetAreaRadius, 32, FColor::Red);
 	}
 	return TraceResult.ImpactPoint;
 }
