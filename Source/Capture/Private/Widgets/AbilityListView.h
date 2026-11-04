@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ListView.h"
+#include "AbilitySystem/CAbilityInputID.h"
 #include "AbilityListView.generated.h"
 
+class UGameplayAbility;
 /**
  * 
  */
@@ -13,5 +15,6 @@ UCLASS()
 class UAbilityListView : public UListView
 {
 	GENERATED_BODY()
-	
+public:
+	void ConfigureAbilities(const TMap<ECAbilityInputID, TSubclassOf<UGameplayAbility>>& Abilities);
 };

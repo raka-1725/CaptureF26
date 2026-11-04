@@ -2,4 +2,14 @@
 
 
 #include "Widgets/AbilityListView.h"
+#include "Abilities/GameplayAbility.h"
 
+void UAbilityListView::ConfigureAbilities(const TMap<ECAbilityInputID, TSubclassOf<UGameplayAbility>>& Abilities)
+{
+	for (const TPair<ECAbilityInputID, TSubclassOf<UGameplayAbility>>& AbilityPair : Abilities)
+	{
+		//Need inherit from IUserObjectListEntry
+		// We use the default object of the ability class to be the item aded in.
+		AddItem(AbilityPair.Value->GetDefaultObject());
+	}
+}
