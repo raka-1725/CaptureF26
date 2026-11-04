@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "AbilitySystem/CAbilityInputID.h"
 #include "GameplayWidget.generated.h"
 
+class UGameplayAbility;
 /**
  * 
  */
@@ -15,6 +17,7 @@ class UGameplayWidget : public UUserWidget
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	void InitializedWithAbilities(const TMap<ECAbilityInputID, TSubclassOf<UGameplayAbility>>& Abilities);
 private:
 	UPROPERTY(meta=(BindWidget))
 	class UValueGuage* HealthBar;
@@ -23,7 +26,7 @@ private:
 	class UValueGuage* ManaBar;
 	
 	UPROPERTY()
-	const class UAbilitySystemComponent* OwnerAbilitySystemComponent;
+	const class UCAbilitySystemComponent* OwnerAbilitySystemComponent;
 	
 	
 };

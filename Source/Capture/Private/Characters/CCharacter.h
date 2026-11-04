@@ -8,7 +8,11 @@
 #include "GameplayTagContainer.h"
 #include "GenericTeamAgentInterface.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "AbilitySystem/CAbilityInputID.h"
 #include "CCharacter.generated.h"
+
+class UGameplayAbility;
+
 
 UCLASS()
 class ACCharacter : public ACharacter, public IAbilitySystemInterface, public IGenericTeamAgentInterface
@@ -25,6 +29,7 @@ public:
 	void ClientSideInit();
 	bool IsLocallyControlledByPlayer() const;
 	virtual void PossessedBy(AController* NewController) override;
+	const TMap<ECAbilityInputID, TSubclassOf<UGameplayAbility>>& GetInitialAbilities() const;  
 	
 protected:
 	// Called when the game starts or when spawned

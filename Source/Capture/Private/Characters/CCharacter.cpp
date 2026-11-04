@@ -61,7 +61,7 @@ void ACCharacter::ServerSideInit()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 	AbilitySystemComponent->ApplyInitialEffects();
-	AbilitySystemComponent->GiveInitialAbilities();
+	AbilitySystemComponent->GiveAbilities();
 
 }
 
@@ -239,6 +239,11 @@ void ACCharacter::PossessedBy(AController* NewController)
 	{
 		ServerSideInit();
 	}
+}
+
+const TMap<ECAbilityInputID, TSubclassOf<UGameplayAbility>>& ACCharacter::GetInitialAbilities() const
+{
+	return AbilitySystemComponent->GetInitialAbilities();
 }
 
 void ACCharacter::DeathTagUpdated(const struct FGameplayTag Tag, int32 Count)
