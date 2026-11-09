@@ -7,6 +7,22 @@
 #include "Blueprint/IUserObjectListEntry.h"
 #include "AbilityGuage.generated.h"
 
+USTRUCT(BlueprintType)
+struct FAbilityWidgetData : public FTableRowBase
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UGameplayAbility> AbilityClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName AbilityName;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UTexture2D> Icon;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText Description;
+};
 /**
  * 
  */
@@ -16,8 +32,12 @@ class UAbilityGuage : public UUserWidget, public IUserObjectListEntry
 	GENERATED_BODY()
 public:
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject);
+	void ConfigureWithWidgetData(const FAbilityWidgetData* AbilityWidgetData);
 	
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+	FName IconTextureParamName = "Icon";
+	
 	UPROPERTY(meta=(BindWidget))
 	class UImage* Icon;
 	
