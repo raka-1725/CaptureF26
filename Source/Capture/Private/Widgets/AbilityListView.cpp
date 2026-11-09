@@ -24,7 +24,7 @@ void UAbilityListView::NativeOnEntryGenerated(UUserWidget* EntryWidget)
 	}
 }
 
-const FAbilityWidgetData* UAbilityListView::FindWidgetDataForAbility(
+const struct FAbilityWidgetData* UAbilityListView::FindWidgetDataForAbility(
 	const TSubclassOf<UGameplayAbility>& AbilityClass) const
 {
 	if (!AbilityDataTable) return nullptr;
