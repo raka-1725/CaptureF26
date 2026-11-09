@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayAbilitySpec.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/IUserObjectListEntry.h"
 #include "AbilityGuage.generated.h"
@@ -74,5 +75,7 @@ private:
 	float CachedCooldownTimeRemaining;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Cooldown")
-	FName CooldownPerceptParamName = "Percept";
+	FName CooldownPercentParamName = "Percent";
+	
+	void AbilitySpecUpdated(const FGameplayAbilitySpec& AbilitySpec);
 };

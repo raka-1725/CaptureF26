@@ -18,6 +18,7 @@ void UAbilityGuage::NativeConstruct()
 	if (OwnerASC)
 	{
 		OwnerASC->AbilityCommittedCallbacks.AddUObject(this, &UAbilityGuage::AbilityCommitted);
+		OwnerASC->AbilitySpecDirtiedCallbacks.AddUObject(this, &UAbilityGuage::AbilitySpecUpdated);
 	}
 }
 
@@ -104,12 +105,22 @@ void UAbilityGuage::StartCooldown(float CooldownTimeRemaining, float CooldownDur
 void UAbilityGuage::UpdateCooldown()
 {
 	CachedCooldownTimeRemaining -= CooldownUpdateInterval;
-	CooldownCounterText->SetText(FText::AsNumber(CachedCooldownTimeRemaining));
+	int NumberDigits = CachedCooldownTimeRemaining >= 1.0 ? 0 : 2;
+	FNumberFormattingOptions FormattingOptions = FNumberFormattingOptions().SetMaximumFractionalDigits(NumberDigits);
+	CooldownCounterText->SetText(FText::AsNumber(CachedCooldownTimeRemaining, &FormattingOptions));
+	Icon->GetDynamicMaterial()->SetScalarParameterValue(CooldownPercentParamName, 1 - (CachedCooldownTimeRemaining / CachedCooldownDuration));
+	//UE_LOG(LogTemp, Warning, TEXT("CooldownProgressPercent: %f"), CooldownProgressPercent);
+	
 }
 void UAbilityGuage::CooldownFinished()
 {
 	CachedCooldownDuration = CachedCooldownTimeRemaining = 0.0f;
 	GetWorld()->GetTimerManager().ClearTimer(CooldownTimerHandle);
-	CooldownCounterText->SetVisibility(ESlateVisibility::Hidden);
+	CooldownCounterText->SetVisibility(ESlateVisibility::Hidden);	
+}
+
+void UAbilityGuage::AbilitySpecUpdated(const FGameplayAbilitySpec& AbilitySpec)
+{
+	//react to spec changes like level.
 }
 

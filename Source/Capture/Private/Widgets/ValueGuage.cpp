@@ -56,8 +56,8 @@ void UValueGuage::SetValue(float NewValue, float NewMaxValue)
 	
 	ProgressBar->SetPercent(NewValue / NewMaxValue);
 	
-	
 	static FNumberFormattingOptions FormattingOptions = FNumberFormattingOptions().SetMaximumFractionalDigits(0);
+	
 	ValueText->SetText(
 		FText::Format
 		(
