@@ -2,7 +2,7 @@
 %~dp0../Capture.uproject ^
 -server ^
 -log ^
--epicapp="ServerClient" ^ 
+-epicapp="ServerClient" ^
 -SESSION_NAME="TestSession" ^
 -SESSION_SEARCH_ID="testtest" ^
 -SESSION_PORT=7778
