@@ -9,7 +9,8 @@ public class Capture : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput",
-			"GameplayAbilities", "GameplayTasks", "GameplayTags", "AIModule", "UMG", "Slate", "SlateCore", "NavigationSystem", "StateTreeModule", "GameplayStateTreeModule" });
+			"GameplayAbilities", "GameplayTasks", "GameplayTags", "AIModule", "UMG", "Slate", "SlateCore", "NavigationSystem", "StateTreeModule", 
+			"GameplayStateTreeModule", "OnlineSubsystem", "OnlineSubsystemEOS", "Networking", "HTTP", "Json" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "OnlineSubsystem" });
 
