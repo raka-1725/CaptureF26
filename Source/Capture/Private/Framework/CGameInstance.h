@@ -4,6 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+
+#include "Interfaces/OnlineSessionInterface.h"
+#include "Interfaces/OnlineIdentityInterface.h"
+#include "OnlineSessionSettings.h"
+#include "OnlineSubsystem.h"
+
 #include "CGameInstance.generated.h"
 
 /**
@@ -21,8 +27,19 @@ class UCGameInstance : public UGameInstance
 private:
 	void CreateSession();
 	
+	FOnlineSessionSettings GenerateSessionSetting(const FName& SessionName, const FString& SessionSearchID, int Port) const;
+
+	void TerminateSessionServer();
 	
+	void EndSessionCompleted(FName SessionName, bool bWasSuccessful);
+	void OnSessionCreated(FName SessionName, bool bWasSuccessful);
+	//-------------------------//
+	//	Online Interfaces     //
+	//------------------------// 
 	
+private:
+	IOnlineSessionPtr GetSessionInterface() const;
+	IOnlineIdentityPtr GetIdentityInterface() const;	
 	
 	//-------------------------//
 	//	Commandline Utilities //
@@ -46,4 +63,15 @@ private:
 	
 	FString ServerSessionName;
 	int ServerSessionPort;
+	
+	//-------------------------//
+	//	Map Loading            //
+	//------------------------// 
+	
+	
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Map")
+	TSoftObjectPtr<UWorld> GameLevel;
+	
+	void LoadLevelandListen(TSoftObjectPtr<UWorld> Level);
 };
