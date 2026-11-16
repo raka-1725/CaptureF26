@@ -13,8 +13,15 @@ bool UCGameInstance::IsLoggedIn() const
 	
 	return false;
 }
+
+bool UCGameInstance::IsLoggingIn() const
+{
+	return bIsLoggedIn; 
+}
+
 void UCGameInstance::ClientAuthPortalLogin()
 {
+	bIsLoggedIn = true;
 	IOnlineIdentityPtr IdentityInterface = GetIdentityInterface();
 	if (IdentityInterface)
 	{
@@ -24,6 +31,7 @@ void UCGameInstance::ClientAuthPortalLogin()
 			IdentityInterface->OnLoginCompleteDelegates->AddUObject(this, &UCGameInstance::ClientLoginCompleted);
 			if (IdentityInterface->Login(0, FOnlineAccountCredentials("accountportal", "","")))
 			{
+				bIsLoggedIn = false;
 				UE_LOG(LogTemp,Warning, TEXT("-----------"))
 				UE_LOG(LogTemp,Warning, TEXT("Login Failed right away"))
 				UE_LOG(LogTemp,Warning, TEXT("-----------"))
@@ -32,6 +40,7 @@ void UCGameInstance::ClientAuthPortalLogin()
 	}
 	else
 	{
+		bIsLoggedIn = false;
 		UE_LOG(LogTemp,Warning, TEXT("-----------"))
 		UE_LOG(LogTemp,Warning, TEXT("Login Failed right away"))
 		UE_LOG(LogTemp,Warning, TEXT("-----------"))
@@ -42,6 +51,7 @@ void UCGameInstance::ClientAuthPortalLogin()
 void UCGameInstance::ClientLoginCompleted(int LocalPlayerNumber, bool bWasSuccessful, const FUniqueNetId& UserId,
 	const FString& ErrorMsg)
 {
+	bIsLoggedIn = false;
 	IOnlineIdentityPtr IdentityInterface = GetIdentityInterface();
 	if (IdentityInterface)
 	{

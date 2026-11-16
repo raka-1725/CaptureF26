@@ -58,10 +58,16 @@ public:
 	void RequestCreateNewSession();
 	void TryFindAndJoinSession();
 	FOnAuthLoginCompleteDelegate OnAuthLoginCompleteDelegate;
+	
 	bool IsLoggedIn() const;
+	bool IsLoggingIn() const;
+	
 	void ClientAuthPortalLogin();
 private:
 	void ClientLoginCompleted(int LocalPlayerNumber, bool bWasSuccessful, const FUniqueNetId& UserId, const FString& ErrorMsg);
+	
+	bool bIsLoggedIn;
+	
 	//-------------------------//
 	//	Online Interfaces     //
 	//------------------------// 
