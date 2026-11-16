@@ -13,7 +13,7 @@ void UMainMenuWidget::NativeConstruct()
 	CGameInstance = GetGameInstance<UCGameInstance>();
 	if (CGameInstance)
 	{
-		//
+		CGameInstance->OnAuthLoginCompleteDelegate.AddUObject(this, &UMainMenuWidget::LoginCompleted);
 	}
 	
 	LoginButton->OnClicked.AddDynamic(this, &UMainMenuWidget::LoginBtnClicked);
@@ -22,6 +22,10 @@ void UMainMenuWidget::NativeConstruct()
 void UMainMenuWidget::LoginBtnClicked()
 {
 	UE_LOG(LogTemp, Warning, TEXT("LoginButtonClicked"));
+	if (CGameInstance)
+	{
+		CGameInstance->ClientAuthPortalLogin();
+	}
 }
 
 void UMainMenuWidget::LoginCompleted(bool bWasSuccessful, const FString& PlayerNickname, const FString& ErrorMsg)

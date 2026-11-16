@@ -12,6 +12,9 @@
 
 #include "CGameInstance.generated.h"
 
+
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnAuthLoginCompleteDelegate, bool /*bWasSuccessful*/, const FString& /*PlayerNickname*/, const FString& /*ErrorMessage*/ );
+
 /**
  * 
  */
@@ -24,6 +27,7 @@ class UCGameInstance : public UGameInstance
 	
 	bool IsSessionServer() const;
 public:
+	
 	void PlayerJoined(const FUniqueNetIdRepl& UniqueId);
 	void PlayerLeft(const FUniqueNetIdRepl& UniqueId);
 	
@@ -46,7 +50,16 @@ private:
 	//set cannot have two same thing inside, -> 
 	TSet<FUniqueNetIdRepl> PlayerRecord;
 	
+	//-------------------------//
+	//	Game Client     //
+	//------------------------// 
 	
+public:
+	FOnAuthLoginCompleteDelegate OnAuthLoginCompleteDelegate;
+	bool IsLoggedIn() const;
+	void ClientAuthPortalLogin();
+private:
+	void ClientLoginCompleted(int LocalPlayerNumber, bool bWasSuccessful, const FUniqueNetId& UserId, const FString& ErrorMsg);
 	//-------------------------//
 	//	Online Interfaces     //
 	//------------------------// 

@@ -3,6 +3,64 @@
 
 #include "Framework/CGameInstance.h"
 
+bool UCGameInstance::IsLoggedIn() const
+{
+	IOnlineIdentityPtr IdentityInterface = GetIdentityInterface();
+	if (IdentityInterface)
+	{
+		return IdentityInterface->GetLoginStatus(0) == ELoginStatus::LoggedIn;
+	}
+	
+	return false;
+}
+void UCGameInstance::ClientAuthPortalLogin()
+{
+	IOnlineIdentityPtr IdentityInterface = GetIdentityInterface();
+	if (IdentityInterface)
+	{
+		if (IdentityInterface->Login(0, FOnlineAccountCredentials("accountportal", "","")))
+		{
+			IdentityInterface->OnLoginCompleteDelegates->RemoveAll(this);
+			IdentityInterface->OnLoginCompleteDelegates->AddUObject(this, &UCGameInstance::ClientLoginCompleted);
+			if (IdentityInterface->Login(0, FOnlineAccountCredentials("accountportal", "","")))
+			{
+				UE_LOG(LogTemp,Warning, TEXT("-----------"))
+				UE_LOG(LogTemp,Warning, TEXT("Login Failed right away"))
+				UE_LOG(LogTemp,Warning, TEXT("-----------"))
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp,Warning, TEXT("-----------"))
+		UE_LOG(LogTemp,Warning, TEXT("Login Failed right away"))
+		UE_LOG(LogTemp,Warning, TEXT("-----------"))
+
+	}
+}
+
+void UCGameInstance::ClientLoginCompleted(int LocalPlayerNumber, bool bWasSuccessful, const FUniqueNetId& UserId,
+	const FString& ErrorMsg)
+{
+	IOnlineIdentityPtr IdentityInterface = GetIdentityInterface();
+	if (IdentityInterface)
+	{
+		IdentityInterface->OnLoginCompleteDelegates->RemoveAll(this);
+	}
+	
+	if (bWasSuccessful)
+	{
+		FString PlayerNickaname = IdentityInterface->GetPlayerNickname(UserId);
+		UE_LOG(LogTemp,Warning, TEXT("-----------"))
+		UE_LOG(LogTemp,Warning, TEXT("Login Successful as : %s"), *(PlayerNickaname));
+		UE_LOG(LogTemp,Warning, TEXT("-----------"))
+		
+		OnAuthLoginCompleteDelegate.Broadcast(bWasSuccessful, PlayerNickaname, ErrorMsg);
+		return;
+	}
+	
+	OnAuthLoginCompleteDelegate.Broadcast(bWasSuccessful, "", ErrorMsg);
+}
 void UCGameInstance::Init()
 {
 	Super::Init();
@@ -140,6 +198,8 @@ void UCGameInstance::WaitPlayerJoinTimeoutReached()
 	UE_LOG(LogTemp, Warning, TEXT("-----------------------------Session Server shutdown after %f second without player joining"), WaitPlayerJoinTimeoutDuration);
 	TerminateSessionServer();
 }
+
+
 
 IOnlineSessionPtr UCGameInstance::GetSessionInterface() const
 {
