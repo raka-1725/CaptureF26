@@ -2,6 +2,8 @@
 
 
 #include "Widgets/MainMenuWidget.h"
+
+#include "MatchMakingWidget.h"
 #include "Framework/CGameInstance.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
@@ -14,9 +16,19 @@ void UMainMenuWidget::NativeConstruct()
 	if (CGameInstance)
 	{
 		CGameInstance->OnAuthLoginCompleteDelegate.AddUObject(this, &UMainMenuWidget::LoginCompleted);
+		if (CGameInstance->IsLoggedIn())
+		{
+			SwitchToMatchMakingWidget();
+		}
 	}
 	
 	LoginButton->OnClicked.AddDynamic(this, &UMainMenuWidget::LoginBtnClicked);
+}
+
+void UMainMenuWidget::SwitchToMatchMakingWidget()
+{
+	MainSwitcher->SetActiveWidget(MatchMakingWidget);
+	MatchMakingWidget->SetKeyboardFocus();
 }
 
 void UMainMenuWidget::LoginBtnClicked()
@@ -33,6 +45,8 @@ void UMainMenuWidget::LoginCompleted(bool bWasSuccessful, const FString& PlayerN
 	if (bWasSuccessful)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Login successful"));
+		
+		SwitchToMatchMakingWidget();
 	}
 	else
 	{

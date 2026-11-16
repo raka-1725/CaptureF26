@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/WidgetSwitcher.h"
 #include "MainMenuWidget.generated.h"
 
 /**
@@ -21,6 +22,12 @@ private:
 	
 	UPROPERTY()
 	class UCGameInstance* CGameInstance;
+	
+	UPROPERTY(meta=(BindWidget))
+	class UMatchMakingWidget* MatchMakingWidget;
+	
+	void SwitchToMatchMakingWidget();
+
 	
 	//-----//
 	//Login//

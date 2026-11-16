@@ -61,6 +61,15 @@ void UCGameInstance::ClientLoginCompleted(int LocalPlayerNumber, bool bWasSucces
 	
 	OnAuthLoginCompleteDelegate.Broadcast(bWasSuccessful, "", ErrorMsg);
 }
+void UCGameInstance::RequestCreateNewSession()
+{
+	UE_LOG(LogTemp,Warning,TEXT("Requesting to create new session"));
+}
+
+void UCGameInstance::TryFindAndJoinSession()
+{
+	UE_LOG(LogTemp,Warning,TEXT("Requesting to find and join session"));
+}
 void UCGameInstance::Init()
 {
 	Super::Init();
@@ -198,6 +207,7 @@ void UCGameInstance::WaitPlayerJoinTimeoutReached()
 	UE_LOG(LogTemp, Warning, TEXT("-----------------------------Session Server shutdown after %f second without player joining"), WaitPlayerJoinTimeoutDuration);
 	TerminateSessionServer();
 }
+
 
 
 

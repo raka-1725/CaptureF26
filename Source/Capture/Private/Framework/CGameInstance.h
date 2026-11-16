@@ -55,6 +55,8 @@ private:
 	//------------------------// 
 	
 public:
+	void RequestCreateNewSession();
+	void TryFindAndJoinSession();
 	FOnAuthLoginCompleteDelegate OnAuthLoginCompleteDelegate;
 	bool IsLoggedIn() const;
 	void ClientAuthPortalLogin();
