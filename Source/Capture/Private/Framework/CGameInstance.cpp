@@ -21,6 +21,25 @@ bool UCGameInstance::IsSessionServer() const
 	return GetWorld() && GetWorld()->GetNetMode() == NM_DedicatedServer;
 }
 
+void UCGameInstance::PlayerJoined(const FUniqueNetIdRepl& UniqueId)
+{
+	if (WaitPlayerJoinTimeoutHandle.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(WaitPlayerJoinTimeoutHandle);
+	}
+	PlayerRecord.Add(UniqueId);
+}
+
+void UCGameInstance::PlayerLeft(const FUniqueNetIdRepl& UniqueId)
+{
+	PlayerRecord.Remove(UniqueId);
+	if (PlayerRecord.Num() == 0)
+	{
+		UE_LOG(LogTemp,Warning,TEXT("------------All player left server, terminating"))
+		TerminateSessionServer();
+	}
+}
+
 void UCGameInstance::CreateSession()
 {
 	if (IOnlineSessionPtr SessionPtr = GetSessionInterface())
@@ -101,6 +120,7 @@ void UCGameInstance::OnSessionCreated(FName SessionName, bool bWasSuccessful)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Session %s created successfully"), *SessionName.ToString());
 		LoadLevelandListen(GameLevel);
+		GetWorld()->GetTimerManager().SetTimer(WaitPlayerJoinTimeoutHandle, this, &UCGameInstance::WaitPlayerJoinTimeoutReached, WaitPlayerJoinTimeoutDuration);
 	}
 	else
 	{
@@ -113,6 +133,12 @@ void UCGameInstance::OnSessionCreated(FName SessionName, bool bWasSuccessful)
 	{
 		SessionPtr->OnCreateSessionCompleteDelegates.RemoveAll(this);
 	}
+}
+
+void UCGameInstance::WaitPlayerJoinTimeoutReached()
+{
+	UE_LOG(LogTemp, Warning, TEXT("-----------------------------Session Server shutdown after %f second without player joining"), WaitPlayerJoinTimeoutDuration);
+	TerminateSessionServer();
 }
 
 IOnlineSessionPtr UCGameInstance::GetSessionInterface() const

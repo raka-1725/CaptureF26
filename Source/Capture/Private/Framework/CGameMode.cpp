@@ -5,7 +5,13 @@
 
 #include "EngineUtils.h"
 #include "GameFramework/PlayerStart.h"
+#include  "Framework/CGameSession.h"
 #include "GenericTeamAgentInterface.h"
+
+ACGameMode::ACGameMode()
+{
+	GameSessionClass = ACGameSession::StaticClass();
+}
 
 APlayerController* ACGameMode::SpawnPlayerController(ENetRole InRemoteRole, const FString& Options)
 {

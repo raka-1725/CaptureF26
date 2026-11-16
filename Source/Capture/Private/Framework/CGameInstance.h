@@ -23,6 +23,9 @@ class UCGameInstance : public UGameInstance
 	virtual void Init() override;
 	
 	bool IsSessionServer() const;
+public:
+	void PlayerJoined(const FUniqueNetIdRepl& UniqueId);
+	void PlayerLeft(const FUniqueNetIdRepl& UniqueId);
 	
 private:
 	void CreateSession();
@@ -33,6 +36,17 @@ private:
 	
 	void EndSessionCompleted(FName SessionName, bool bWasSuccessful);
 	void OnSessionCreated(FName SessionName, bool bWasSuccessful);
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Session")
+	float WaitPlayerJoinTimeoutDuration = 60.0f;
+	
+	FTimerHandle WaitPlayerJoinTimeoutHandle;
+	void WaitPlayerJoinTimeoutReached();
+	
+	//set cannot have two same thing inside, -> 
+	TSet<FUniqueNetIdRepl> PlayerRecord;
+	
+	
 	//-------------------------//
 	//	Online Interfaces     //
 	//------------------------// 

@@ -14,7 +14,7 @@ UCLASS()
 class ACGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+	ACGameMode();	
 public:
 	virtual APlayerController* SpawnPlayerController(ENetRole InRemoteRole, const FString& Options) override;
 	
