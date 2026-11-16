@@ -26,6 +26,7 @@ public:
 	//called when clients or listening server, not on dedicated server
 	virtual void AcknowledgePossession(APawn* NewPawn) override;
 	
+	void BeginPlay() override;
 private:
 	UPROPERTY()
 	class ACPlayerCharacter* CPlayerCharacter;
