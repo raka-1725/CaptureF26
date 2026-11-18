@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Button.h"
 #include "MatchMakingWidget.generated.h"
 
 /**
@@ -13,9 +14,12 @@ UCLASS()
 class UMatchMakingWidget : public UUserWidget
 {
 	GENERATED_BODY()
-private:
+public:
 	virtual void NativeConstruct() override;
+	FOnButtonClickedEvent& GetFindAndJoinSessionButtonClickEvent();
+	FOnButtonClickedEvent& GetCreateNewSessionButtonClickEvent();
 	
+private:
 	UPROPERTY(meta=(BindWidget))
 	class UButton* CreateNewSessionButton;
 	

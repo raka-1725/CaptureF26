@@ -20,12 +20,16 @@ private:
 	UPROPERTY(meta=(BindWidget))
 	class UWidgetSwitcher* MainSwitcher;
 	
+	UPROPERTY(meta=(BindWidget))
+	class UWaitingWidget* WaitingWidget;
+	
 	UPROPERTY()
 	class UCGameInstance* CGameInstance;
 	
 	UPROPERTY(meta=(BindWidget))
 	class UMatchMakingWidget* MatchMakingWidget;
 	
+	UFUNCTION() // dynamic delegate needs to be ufunc
 	void SwitchToMatchMakingWidget();
 
 	
@@ -44,4 +48,10 @@ private:
 	void LoginCompleted(bool bWasSuccessful, const FString& PlayerNickname, const FString& ErrorMsg);
 
 	virtual FReply NativeOnFocusReceived(const FGeometry& InGeometry, const FFocusEvent& InFocusEvent) override;
+	
+	UFUNCTION()
+	void WaitForNewSessionCreate();
+	
+	UFUNCTION()
+	void WaitForFindAndJoinSession();
 };
