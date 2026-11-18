@@ -2,7 +2,59 @@
 
 
 #include "Framework/CGameInstance.h"
+#include "HttpModule.h"
 
+void UCGameInstance::RequestCreateNewSession()
+{
+	UE_LOG(LogTemp,Warning,TEXT("Requesting to create new session"));
+	FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
+	FGuid SessionSearchId = FGuid::NewGuid();
+	FString CorrdinatorURL = GetCoordinatorURL();
+	
+	UE_LOG(LogTemp,Warning,TEXT("Corrdinator URL: %s"), *CorrdinatorURL);
+	
+	
+	
+	// 127.0.0.1/Session
+	FString URL = FString::Printf(TEXT("%s/Session"), *CorrdinatorURL);
+	Request->SetURL(URL);
+	
+	// post means you are requesting something to be created
+	Request->SetVerb("POST");
+	
+	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+	
+	//JSON
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable<FJsonObject>(new FJsonObject);
+	JsonObject->SetStringField(SessionNameKey.ToString(), FGuid::NewGuid().ToString());
+	JsonObject->SetStringField(SessionSearchIDKey.ToString(), SessionSearchId.ToString());
+
+	//converting into string
+	FString RequestBody;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&RequestBody);
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer);
+	
+	Request->SetContentAsString(RequestBody);
+	
+	Request->OnProcessRequestComplete().BindUObject(this, &UCGameInstance::SessionCreationRequestCompleted, SessionSearchId);
+	
+	if (!Request->ProcessRequest())
+	{
+		UE_LOG(LogTemp,Warning,TEXT("Session creation request FAILED at process"));
+	}
+}
+void UCGameInstance::SessionCreationRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response,
+	bool bWasSuccessful, FGuid SessionSearchId)
+{
+	if (bWasSuccessful && Response.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Session creation request completed successfully"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Session creation request FAILED"));
+	}
+}
 bool UCGameInstance::IsLoggedIn() const
 {
 	IOnlineIdentityPtr IdentityInterface = GetIdentityInterface();
@@ -71,9 +123,17 @@ void UCGameInstance::ClientLoginCompleted(int LocalPlayerNumber, bool bWasSucces
 	
 	OnAuthLoginCompleteDelegate.Broadcast(bWasSuccessful, "", ErrorMsg);
 }
-void UCGameInstance::RequestCreateNewSession()
+
+FString UCGameInstance::GetCoordinatorURL() const
 {
-	UE_LOG(LogTemp,Warning,TEXT("Requesting to create new session"));
+	FString CoordinatorURL = GetCommandLineArgAsString(COORDINATOR_URL_KEY);
+	if (CoordinatorURL != "")
+	{
+		return CoordinatorURL;
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("Can't find command coordinator url arg, using default : %s"), *(DEFAULT_COORDINATOR_URL));
+	return DEFAULT_COORDINATOR_URL;
 }
 
 void UCGameInstance::TryFindAndJoinSession()
