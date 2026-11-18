@@ -49,6 +49,22 @@ void UCGameInstance::SessionCreationRequestCompleted(FHttpRequestPtr Request, FH
 	if (bWasSuccessful && Response.IsValid())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Session creation request completed successfully"));
+		int32 ResponseCode = Response->GetResponseCode();
+		if (ResponseCode == 200)
+		{
+			FString ResponseString = Response->GetContentAsString();
+			
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseString);
+			
+			int32 Port = 0;
+			if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
+			{
+				Port = JsonObject->GetIntegerField(*(SessionPortKey.ToString()));
+				UE_LOG(LogTemp,Warning, TEXT("Create session with Port :: %d"), Port);
+			}
+			
+		}
 	}
 	else
 	{
@@ -213,12 +229,13 @@ FOnlineSessionSettings UCGameInstance::GenerateSessionSetting(const FName& Sessi
 {
 	FOnlineSessionSettings OnlineSessionSettings{};
 	OnlineSessionSettings.bIsLANMatch = false;
-	OnlineSessionSettings.NumPrivateConnections = 10;
+	OnlineSessionSettings.NumPublicConnections = 10;
 	OnlineSessionSettings.bShouldAdvertise = true;
 	OnlineSessionSettings.bUsesPresence = false;
 	OnlineSessionSettings.bAllowJoinViaPresence = false;
 	OnlineSessionSettings.bAllowJoinViaPresenceFriendsOnly = false;
 	OnlineSessionSettings.bAllowInvites = true;
+	OnlineSessionSettings.bAllowJoinInProgress = false;
 	OnlineSessionSettings.bUseLobbiesIfAvailable = false;
 	OnlineSessionSettings.bUsesStats = true;
 	
