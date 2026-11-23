@@ -71,6 +71,16 @@ void UCGameInstance::SessionCreationRequestCompleted(FHttpRequestPtr Request, FH
 		UE_LOG(LogTemp, Warning, TEXT("Session creation request FAILED"));
 	}
 }
+
+void UCGameInstance::StartFindingAndJoinSession(FGuid SessionSearchId)
+{
+	UE_LOG(LogTemp,Warning, TEXT("Start FInding and Join Session with id: %s"), *SessionSearchId.ToString())
+	GetWorld()->GetTimerManager().SetTimer(FindSessionTimerHandle, FTimerDelegate::CreateUObject(this, &UCGameInstance::FindJoinSession, SessionSearchId), SessionSearchInterval, true);
+	
+	GetWorld()->GetTimerManager().SetTimer(FindSessionTimeoutTimerHandle,this, &UCGameInstance::StopSessionSearches, SessionSearchTimeoutDuration);
+
+}
+
 bool UCGameInstance::IsLoggedIn() const
 {
 	IOnlineIdentityPtr IdentityInterface = GetIdentityInterface();
@@ -296,7 +306,65 @@ void UCGameInstance::WaitPlayerJoinTimeoutReached()
 }
 
 
+void UCGameInstance::FindJoinSession(FGuid SessionSearchId)
+{
+	if (IOnlineSessionPtr SessionPtr = GetSessionInterface())
+	{
+		SessionSearch = MakeShareable(new FOnlineSessionSearch);
+		if (SessionSearch)
+		{
+			SessionSearch->bIsLanQuery = false;
+			SessionSearch->MaxSearchResults = 1;
+			if (SessionSearchId.IsValid())
+			{
+				SessionSearch->QuerySettings.Set(SessionSearchIDKey, SessionSearchId.ToString(), EOnlineComparisonOp::Equals);
+			}
+			
+			SessionPtr->OnFindSessionsCompleteDelegates.RemoveAll(this);
+			SessionPtr->OnFindSessionsCompleteDelegates.AddUObject(this, &UCGameInstance::FindSessionCompleted);
+			
+			if (!SessionPtr->FindSessions(0, SessionSearch.ToSharedRef()))
+			{
+				UE_LOG(LogTemp,Warning,TEXT("Session Search failed"));
+				SessionPtr->OnFindSessionsCompleteDelegates.RemoveAll(this);
+			}
+			
+		}
+	}
+}
 
+void UCGameInstance::StopSessionSearches()
+{
+	if (FindSessionTimerHandle.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(FindSessionTimerHandle);
+	}
+	
+	if (FindSessionTimerHandle.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(FindSessionTimeoutTimerHandle);
+	}
+	
+	if (IOnlineSessionPtr SessionPtr = GetSessionInterface())
+	{
+		SessionPtr->OnFindSessionsCompleteDelegates.RemoveAll(this);
+		SessionPtr->OnJoinSessionCompleteDelegates.RemoveAll(this);
+	}
+}
+
+void UCGameInstance::FindSessionCompleted(bool bWasSuccessful)
+{
+	if (!bWasSuccessful || SessionSearch->SearchResults.Num() == 0) return;
+	
+	UE_LOG(LogTemp, Warning, TEXT("Find session to join"));
+	StopSessionSearches();
+	JoinSessionWithSearchResult(SessionSearch->SearchResults[0]);
+}
+
+void UCGameInstance::JoinSessionWithSearchResult(const FOnlineSessionSearchResult& SessionSearchResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Joon Session Search with search Result"));
+}
 
 IOnlineSessionPtr UCGameInstance::GetSessionInterface() const
 {
