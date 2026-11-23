@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NativegameplayTags.h"
+#include "NativeGameplayTags.h"
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ABILITY_BASICATTACK);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ABILITY_COMBO_CHANGE);
@@ -20,7 +20,7 @@ UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_STAT_STUN)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_STAT_AIMING)
 
 //(Extern) is decleartion only
-extern int TestTest = 0;
+//extern int TestTest = 0;
 
 
 /**
