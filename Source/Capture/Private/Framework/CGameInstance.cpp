@@ -62,6 +62,7 @@ void UCGameInstance::SessionCreationRequestCompleted(FHttpRequestPtr Request, FH
 			{
 				Port = JsonObject->GetIntegerField(*(SessionPortKey.ToString()));
 				UE_LOG(LogTemp,Warning, TEXT("Create session with Port :: %d"), Port);
+				StartFindingAndJoinSession(SessionSearchId);
 			}
 			
 		}
