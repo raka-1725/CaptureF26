@@ -398,7 +398,29 @@ void UCGameInstance::JoinSessionCompleted(FName SessionName, EOnJoinSessionCompl
 	{
 		StopSessionSearches();
 		UE_LOG(LogTemp,Warning,TEXT("Join session succusess port : %d"), Port);
+		
+		FString TravelURL = "";
+		SessionPtr->GetResolvedConnectString(SessionName, TravelURL);
+		FString TestingURL = GetTestingURL();
+		
+		if (!TestingURL.IsEmpty())
+		{
+			TravelURL = TestingURL;
+		}
+		
+		FURL URL(nullptr, *TravelURL, ETravelType::TRAVEL_Absolute);
+		URL.Port = Port;
+		TravelURL = URL.ToString();
+		
+		UE_LOG(LogTemp, Warning, TEXT("Traveling to session at: %s"), *TravelURL)
+		GetFirstLocalPlayerController(GetWorld())->ClientTravel(TravelURL, ETravelType::TRAVEL_Absolute);
 	}
+}
+
+FString UCGameInstance::GetTestingURL() const
+{
+	FString TestingURL = GetCommandLineArgAsString(TESTING_URL_KEY);
+	return TestingURL;
 }
 
 IOnlineSessionPtr UCGameInstance::GetSessionInterface() const
