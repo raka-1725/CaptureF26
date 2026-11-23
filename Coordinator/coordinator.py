@@ -10,11 +10,12 @@ app = Flask(__file__)
 
 def CreateServerLocalTest(SessionName, SessionSearchID):
     global nextAvaialePort
+    print(f"creating session with name {SessionName} and id: {SessionSearchID}")
     subprocess.Popen
     (
         [
             "C:/UnrealSources/Unreal5.7.4/Engine/Binaries/Win64/UnrealEditor.exe",
-            "C:/dev/Capture/Capture.uproject", 
+            "C:/dev/Capture/Capture.uproject",
             "-server",
             "-log",
             "-epicapp=ServerClient",
